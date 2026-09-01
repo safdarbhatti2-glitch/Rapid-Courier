@@ -98,14 +98,20 @@ class ShipmentService
             ]);
 
             // Auto-Generate Linked Tax Invoice for New Shipment
-            $invNum = 'INV-' . date('Y') . '-' . str_pad((string)mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+            $invNum   = 'INV-' . date('Y') . '-' . str_pad((string)mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+            $today    = date('Y-m-d');
+            $dueDate  = date('Y-m-d', strtotime('+14 days'));
+            $now      = date('Y-m-d H:i:s');
+
             Database::execute("
                 INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due)
-                VALUES (?, ?, ?, 'PAID', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY), 'AED', ?, 0.00, ?, ?, ?, 0.00)
+                VALUES (?, ?, ?, 'PAID', ?, ?, 'AED', ?, 0.00, ?, ?, ?, 0.00)
             ", [
                 $invNum,
                 $data['customer_id'],
                 $shipmentId,
+                $today,
+                $dueDate,
                 $pricing['subtotal'],
                 $pricing['tax'],
                 $pricing['total'],
@@ -132,7 +138,7 @@ class ShipmentService
 
             Database::execute("
                 INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at, created_by)
-                VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', NOW(), ?)
+                VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', ?, ?)
             ", [
                 $payNum,
                 $invoiceId,
@@ -140,6 +146,7 @@ class ShipmentService
                 $pricing['total'],
                 $payMethod,
                 $payRef,
+                $now,
                 $data['created_by'] ?? null
             ]);
 
