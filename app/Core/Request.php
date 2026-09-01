@@ -37,7 +37,21 @@ class Request
         $this->uri = '/' . ltrim($uri, '/');
         $this->get = $_GET;
         $this->post = $_POST;
-        $this->headers = getallheaders() ?: [];
+        if (function_exists('getallheaders')) {
+            $this->headers = getallheaders() ?: [];
+        } else {
+            $headers = [];
+            foreach ($_SERVER as $name => $value) {
+                if (str_starts_with($name, 'HTTP_')) {
+                    $headerName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                    $headers[$headerName] = $value;
+                } elseif (in_array($name, ['CONTENT_TYPE', 'CONTENT_LENGTH', 'CONTENT_MD5'])) {
+                    $headerName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', $name))));
+                    $headers[$headerName] = $value;
+                }
+            }
+            $this->headers = $headers;
+        }
 
         $contentType = $this->getHeader('Content-Type') ?? '';
         if (str_contains($contentType, 'application/json')) {
