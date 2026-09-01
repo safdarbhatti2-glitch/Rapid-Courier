@@ -39,7 +39,9 @@ class InvoiceService
             $issueDate = date('Y-m-d');
             $dueDate   = date('Y-m-d', strtotime('+30 days'));
 
-            Database::execute("INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES (?, ?, ?, 'ISSUED', ?, ?, 'AED', ?, 0.00, ?, ?, 0.00, ?, ?, ?, NOW())", [
+            $issuedAt  = date('Y-m-d H:i:s');
+
+            Database::execute("INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES (?, ?, ?, 'ISSUED', ?, ?, 'AED', ?, 0.00, ?, ?, 0.00, ?, ?, ?, ?)", [
                 $invoiceNumber,
                 $data['customer_id'],
                 $data['shipment_id'] ?? null,
@@ -50,7 +52,8 @@ class InvoiceService
                 $total,
                 $total,
                 $data['trn'] ?? '100987654321003',
-                $data['notes'] ?? 'UAE Commercial Courier Services Invoice'
+                $data['notes'] ?? 'UAE Commercial Courier Services Invoice',
+                $issuedAt
             ]);
 
             $invoiceId = Database::lastInsertId();

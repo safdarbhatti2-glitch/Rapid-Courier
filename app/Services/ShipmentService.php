@@ -54,25 +54,26 @@ class ShipmentService
             $destAddressId   = self::ensureAddress($data['customer_id'], $data['receiver_address'], $data['destination_emirate']);
 
             $pickupAt = !empty($data['pickup_at']) ? date('Y-m-d H:i:s', strtotime($data['pickup_at'])) : date('Y-m-d H:i:s');
+            $estDelivery = date('Y-m-d H:i:s', strtotime($pickupAt . ' +1 day'));
 
             // Insert Shipment
-            Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES (?, ?, ?, ?, ?, ?, 'BOOKED', ?, ?, ?, ?, ?, ?, 0.00, ?, ?, 'AED', ?, DATE_ADD(?, INTERVAL 1 DAY))", [
+            Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES (?, ?, ?, ?, ?, ?, 'BOOKED', ?, ?, ?, ?, ?, ?, 0.00, ?, ?, 'AED', ?, ?)", [
                 $refNumber,
                 $trkNumber,
                 $data['customer_id'],
                 $data['service_id'],
                 $originAddressId,
                 $destAddressId,
-                $pricing['chargeable_weight'],
-                $data['length_cm'] ?? 10,
-                $data['width_cm'] ?? 10,
-                $data['height_cm'] ?? 10,
-                $data['declared_value'] ?? 0,
+                (float)$data['weight_kg'],
+                (float)($data['length_cm'] ?? 10),
+                (float)($data['width_cm'] ?? 10),
+                (float)($data['height_cm'] ?? 10),
+                (float)($data['declared_value'] ?? 0),
                 $pricing['subtotal'],
                 $pricing['tax'],
                 $pricing['total'],
                 $pickupAt,
-                $pickupAt
+                $estDelivery
             ]);
 
             $shipmentId = Database::lastInsertId();
