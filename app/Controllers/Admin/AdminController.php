@@ -17,11 +17,13 @@ class AdminController
     {
         $user = Session::get('user');
 
+        $today = date('Y-m-d');
+
         $metrics = [
-            'shipments_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE DATE(created_at) = CURDATE()")['cnt'] ?? 0,
+            'shipments_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE DATE(created_at) = ?", [$today])['cnt'] ?? 0,
             'in_transit'      => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'IN_TRANSIT'")['cnt'] ?? 0,
-            'delivered_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'DELIVERED' AND DATE(updated_at) = CURDATE()")['cnt'] ?? 0,
-            'revenue_today'   => Database::fetchOne("SELECT COALESCE(SUM(amount), 0) as tot FROM payments WHERE DATE(paid_at) = CURDATE()")['tot'] ?? 0.00,
+            'delivered_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'DELIVERED' AND DATE(updated_at) = ?", [$today])['cnt'] ?? 0,
+            'revenue_today'   => Database::fetchOne("SELECT COALESCE(SUM(amount), 0) as tot FROM payments WHERE DATE(paid_at) = ?", [$today])['tot'] ?? 0.00,
             'unpaid_invoices' => Database::fetchOne("SELECT COUNT(*) as cnt FROM invoices WHERE status IN ('ISSUED', 'PARTIALLY_PAID', 'OVERDUE')")['cnt'] ?? 0,
             'pending_quotes'  => Database::fetchOne("SELECT COUNT(*) as cnt FROM quotes WHERE status IN ('DRAFT', 'SENT')")['cnt'] ?? 0,
         ];
