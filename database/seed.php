@@ -218,10 +218,16 @@ try {
 
     // 9. Sample Shipments & Tracking Timeline
     echo " -> Seeding Sample Shipments & Status Events...\n";
+    $now = date('Y-m-d H:i:s');
+    $today = date('Y-m-d');
+    $tomorrow = date('Y-m-d H:i:s', strtotime('+1 day'));
+    $validUntil = date('Y-m-d', strtotime('+14 days'));
+    $dueDate = date('Y-m-d', strtotime('+30 days'));
+
     $shp1 = Database::fetchOne("SELECT id FROM shipments WHERE reference_number = ?", ['SHP-2026-000001']);
     if (!$shp1) {
-        Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES ('SHP-2026-000001', 'RC98412503', ?, ?, ?, ?, 'IN_TRANSIT', 3.50, 30.00, 20.00, 15.00, 500.00, 60.00, 0.00, 3.00, 63.00, 'AED', NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY))", [
-            $customerId, $servicesMap['SAME_DAY'], $originAddrId, $destAddrId
+        Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES ('SHP-2026-000001', 'RC98412503', ?, ?, ?, ?, 'IN_TRANSIT', 3.50, 30.00, 20.00, 15.00, 500.00, 60.00, 0.00, 3.00, 63.00, 'AED', ?, ?)", [
+            $customerId, $servicesMap['SAME_DAY'], $originAddrId, $destAddrId, $now, $tomorrow
         ]);
         $shipmentId = Database::lastInsertId();
 
@@ -248,8 +254,8 @@ try {
     echo " -> Seeding Sample Quotes...\n";
     $qExist = Database::fetchOne("SELECT id FROM quotes WHERE quote_number = ?", ['QT-2026-000001']);
     if (!$qExist) {
-        Database::execute("INSERT INTO quotes (quote_number, customer_id, contact_name, contact_email, contact_phone, status, valid_until, subtotal, discount, tax, total, currency, notes) VALUES ('QT-2026-000001', ?, 'Omar Al-Zaabi', 'demo.customer@example.ae', '+971 55 987 6543', 'ACCEPTED', DATE_ADD(CURDATE(), INTERVAL 14 DAY), 500.00, 25.00, 23.75, 498.75, 'AED', 'Monthly GCC Overland Logistics Freight Contract')", [
-            $customerId
+        Database::execute("INSERT INTO quotes (quote_number, customer_id, contact_name, contact_email, contact_phone, status, valid_until, subtotal, discount, tax, total, currency, notes) VALUES ('QT-2026-000001', ?, 'Omar Al-Zaabi', 'demo.customer@example.ae', '+971 55 987 6543', 'ACCEPTED', ?, 500.00, 25.00, 23.75, 498.75, 'AED', 'Monthly GCC Overland Logistics Freight Contract')", [
+            $customerId, $validUntil
         ]);
         $quoteId = Database::lastInsertId();
 
@@ -260,16 +266,16 @@ try {
     echo " -> Seeding Sample Invoices & Payments...\n";
     $invExist = Database::fetchOne("SELECT id FROM invoices WHERE invoice_number = ?", ['INV-2026-000001']);
     if (!$invExist) {
-        Database::execute("INSERT INTO invoices (invoice_number, customer_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES ('INV-2026-000001', ?, 'PAID', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY), 'AED', 60.00, 0.00, 3.00, 63.00, 63.00, 0.00, '100987654321003', 'Thank you for choosing Antigravity Express UAE.', NOW())", [
-            $customerId
+        Database::execute("INSERT INTO invoices (invoice_number, customer_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES ('INV-2026-000001', ?, 'PAID', ?, ?, 'AED', 60.00, 0.00, 3.00, 63.00, 63.00, 0.00, '100987654321003', 'Thank you for choosing Antigravity Express UAE.', ?)", [
+            $customerId, $today, $dueDate, $now
         ]);
         $invoiceId = Database::lastInsertId();
 
         Database::execute("INSERT INTO invoice_items (invoice_id, description, reference, quantity, unit_price, discount, tax_rate, line_subtotal, line_tax, line_total) VALUES (?, 'Same-Day Courier Freight Delivery (SHP-2026-000001)', 'SHP-2026-000001', 1, 60.00, 0.00, 5.00, 60.00, 3.00, 63.00)", [$invoiceId]);
         Database::execute("INSERT INTO invoice_taxes (invoice_id, tax_name, rate, amount) VALUES (?, 'UAE Standard VAT', 5.00, 3.00)", [$invoiceId]);
 
-        Database::execute("INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at) VALUES ('PAY-2026-000001', ?, ?, 63.00, 'AED', 'credit_card', '**** **** **** 9874', 'completed', NOW())", [
-            $invoiceId, $customerId
+        Database::execute("INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at) VALUES ('PAY-2026-000001', ?, ?, 63.00, 'AED', 'credit_card', '**** **** **** 9874', 'completed', ?)", [
+            $invoiceId, $customerId, $now
         ]);
     }
 
