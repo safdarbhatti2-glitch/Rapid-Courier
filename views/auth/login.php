@@ -23,6 +23,8 @@
 
 <div style="margin-top: 2rem; background: #f8fafc; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.8rem; color: #475569;">
     <strong>Demo Credentials:</strong><br>
-    • Admin: <code>admin@antigravityexpress.ae</code> / <code>Admin@123456</code><br>
-    • Customer: <code>demo.customer@example.ae</code> / <code>Customer@123456</code>
+    • Admin Email: <code>admin@antigravityexpress.ae</code> or <code>admin@rccourier.ae</code><br>
+    • Admin Password: <code>Admin@123456</code><br>
+    • Customer Email: <code>demo.customer@example.ae</code><br>
+    • Customer Password: <code>Customer@123456</code>
 </div>

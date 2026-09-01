@@ -42,6 +42,13 @@ try {
             'pass' => 'Admin@123456'
         ],
         [
+            'role' => 'admin',
+            'name' => 'RC Courier Admin',
+            'email' => 'admin@rccourier.ae',
+            'phone' => '+971 4 800 2684',
+            'pass' => 'Admin@123456'
+        ],
+        [
             'role' => 'finance',
             'name' => 'Tariq Mansoor (Finance Manager)',
             'email' => 'finance@antigravityexpress.ae',
@@ -73,11 +80,12 @@ try {
 
     $usersMap = [];
     foreach ($usersData as $u) {
+        $hash = password_hash($u['pass'], PASSWORD_DEFAULT);
         $existing = Database::fetchOne("SELECT id FROM users WHERE email = ?", [$u['email']]);
         if ($existing) {
+            Database::execute("UPDATE users SET password_hash = ? WHERE id = ?", [$hash, $existing['id']]);
             $usersMap[$u['email']] = $existing['id'];
         } else {
-            $hash = password_hash($u['pass'], PASSWORD_DEFAULT);
             Database::execute("INSERT INTO users (role_id, name, email, phone, password_hash, status) VALUES (?, ?, ?, ?, ?, 'active')", [
                 $rolesMap[$u['role']], $u['name'], $u['email'], $u['phone'], $hash
             ]);
