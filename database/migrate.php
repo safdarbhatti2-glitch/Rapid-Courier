@@ -459,7 +459,8 @@ try {
             $sql = preg_replace('/COLLATE=\w+/i', '', $sql);
             $sql = preg_replace('/ON UPDATE CURRENT_TIMESTAMP/i', '', $sql);
             $sql = preg_replace('/ENUM\([^)]+\)/i', 'TEXT', $sql);
-            $sql = preg_replace('/INDEX `[^`]+` \([^)]+\),?/i', '', $sql);
+            $sql = preg_replace('/INDEX `[^`]+` \([^)]+\)/i', '', $sql);
+            $sql = preg_replace('/,\s*\)/i', ')', $sql);
         }
         $pdo->exec($sql);
         echo " -> Table `{$name}` verified/created.\n";
