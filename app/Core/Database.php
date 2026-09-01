@@ -13,23 +13,50 @@ class Database
     public static function getConnection(): PDO
     {
         if (self::$instance === null) {
-            $host = EnvLoader::get('DB_HOST', '127.0.0.1');
-            $port = EnvLoader::get('DB_PORT', '3306');
-            $db   = EnvLoader::get('DB_NAME', 'rc_courier');
-            $user = EnvLoader::get('DB_USER', 'root');
-            $pass = EnvLoader::get('DB_PASS', '');
+            $driver = EnvLoader::get('DB_DRIVER', 'mysql');
+            $baseDir = defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__, 2);
 
-            $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
-            $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false,
-            ];
+            if ($driver === 'sqlite') {
+                $dbPath = EnvLoader::get('DB_SQLITE_PATH', $baseDir . '/database/database.sqlite');
+                if (!file_exists(dirname($dbPath))) {
+                    @mkdir(dirname($dbPath), 0777, true);
+                }
+                $dsn = "sqlite:" . $dbPath;
+                self::$instance = new PDO($dsn, null, null, [
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES   => false,
+                ]);
+                self::$instance->exec("PRAGMA foreign_keys = ON;");
+            } else {
+                $host = EnvLoader::get('DB_HOST', '127.0.0.1');
+                $port = EnvLoader::get('DB_PORT', '3306');
+                $db   = EnvLoader::get('DB_NAME', 'rc_courier');
+                $user = EnvLoader::get('DB_USER', 'root');
+                $pass = EnvLoader::get('DB_PASS', '');
 
-            try {
-                self::$instance = new PDO($dsn, $user, $pass, $options);
-            } catch (PDOException $e) {
-                throw new RuntimeException("Database connection failed: " . $e->getMessage(), (int)$e->getCode());
+                $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
+                $options = [
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES   => false,
+                ];
+
+                try {
+                    self::$instance = new PDO($dsn, $user, $pass, $options);
+                } catch (PDOException $e) {
+                    $dbPath = $baseDir . '/database/database.sqlite';
+                    if (!file_exists(dirname($dbPath))) {
+                        @mkdir(dirname($dbPath), 0777, true);
+                    }
+                    $dsn = "sqlite:" . $dbPath;
+                    self::$instance = new PDO($dsn, null, null, [
+                        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES   => false,
+                    ]);
+                    self::$instance->exec("PRAGMA foreign_keys = ON;");
+                }
             }
         }
 
