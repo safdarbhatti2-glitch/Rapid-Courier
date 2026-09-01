@@ -462,8 +462,13 @@ try {
             $sql = preg_replace('/INDEX `[^`]+` \([^)]+\)/i', '', $sql);
             $sql = preg_replace('/,\s*\)/i', ')', $sql);
         }
-        $pdo->exec($sql);
-        echo " -> Table `{$name}` verified/created.\n";
+        try {
+            $pdo->exec($sql);
+            echo " -> Table `{$name}` verified/created.\n";
+        } catch (Exception $ex) {
+            echo "\n[ERROR] Table `{$name}` failed!\nError: " . $ex->getMessage() . "\nSQL:\n" . $sql . "\n";
+            throw $ex;
+        }
     }
 
     if ($driverName === 'mysql') {
