@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Book a shipment with RC Courier UAE — premium UAE, GCC and international courier logistics.">
+<title>Book Shipment | RC Courier UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050a12;--bg2:#09111d;--panel:#0c1624;--panel2:#101c2b;--gold:#dca83f;--gold2:#f4cc70;--white:#f8fafc;--muted:#8e9db1;--line:rgba(255,255,255,.085);--blue:#42b5ff;--green:#39c88b;--red:#ef6a6a;--shadow:0 30px 90px rgba(0,0,0,.38)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--white);line-height:1.5}button,input,select,textarea{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+.container{width:min(1120px,92%);margin:auto}.topbar{height:74px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.91);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{display:flex;align-items:center;gap:9px;font-family:Manrope;font-weight:800;white-space:nowrap}.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);border:1px solid rgba(220,168,63,.5);background:linear-gradient(145deg,#172334,#080d15);font-size:13px}.brand span{font-size:15px;letter-spacing:-.045em}.brand small{display:block;color:var(--gold);font:700 6px Inter;letter-spacing:.12em}
+.links{display:flex;gap:21px;color:#aebaca;font-size:11px}.links a:hover{color:#fff}.actions{display:flex;gap:8px}.btn{border:0;border-radius:11px;padding:11px 17px;font-size:11px;font-weight:800;transition:.25s}.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#10151c;box-shadow:0 10px 30px rgba(220,168,63,.14)}.btn-gold:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(220,168,63,.28)}.btn-dark{background:#0d1724;color:#fff;border:1px solid var(--line)}.menu{display:none;background:none;border:0;color:#fff;font-size:24px}
+
+.hero{position:relative;overflow:hidden;padding:62px 0 50px;text-align:center;background:radial-gradient(circle at 50% 0,rgba(220,168,63,.14),transparent 34%),radial-gradient(circle at 12% 55%,rgba(66,181,255,.08),transparent 25%),linear-gradient(180deg,#070d17,#050a12)}
+.hero:before{content:"";position:absolute;inset:0;opacity:.2;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(#000,transparent)}
+.eyebrow{position:relative;display:inline-flex;align-items:center;gap:9px;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.eyebrow:before,.eyebrow:after{content:"";height:1px;width:25px;background:var(--gold)}
+.hero h1{position:relative;font:800 clamp(38px,5.5vw,58px)/1.05 Manrope;letter-spacing:-.065em;margin:15px auto 13px}.hero h1 span{background:linear-gradient(90deg,#fff,var(--gold2));color:transparent;background-clip:text;-webkit-background-clip:text}.hero p{position:relative;max-width:680px;margin:auto;color:var(--muted);font-size:12px}
+
+.booking{padding:0 0 82px}.layout{display:grid;grid-template-columns:1.55fr .8fr;gap:18px;align-items:start}.card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#0d1826,#09121e);box-shadow:var(--shadow)}
+.form-card{padding:29px}.head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:25px}.head h2{font:800 21px Manrope;letter-spacing:-.04em}.head p{font-size:10px;color:#718198;margin-top:4px}.secure{font-size:8px;font-weight:800;color:#8de2ba;background:rgba(56,200,139,.08);border:1px solid rgba(56,200,139,.18);border-radius:20px;padding:7px 9px;white-space:nowrap}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px}.step{display:flex;align-items:center;gap:8px;padding:10px;border-radius:12px;background:#08121e;border:1px solid var(--line);color:#5d6d82;font-size:8px;font-weight:800}.step b{width:21px;height:21px;display:grid;place-items:center;border-radius:50%;background:#162335;color:#8797aa;font-size:8px}.step.active{border-color:rgba(220,168,63,.35);color:#e8c66e;background:rgba(220,168,63,.06)}.step.active b{background:var(--gold);color:#111}
+.section-label{font-size:9px;color:var(--gold2);font-weight:800;text-transform:uppercase;letter-spacing:.13em;margin:25px 0 12px;display:flex;align-items:center;gap:9px}.section-label:after{content:"";height:1px;background:var(--line);flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}label{font-size:9px;color:#94a2b5;font-weight:700}
+input,select,textarea{width:100%;border:1px solid #1c2b3d;background:#07111d;color:#e9eef5;border-radius:11px;padding:12px 13px;outline:0;font-size:10px;transition:.2s}input::placeholder,textarea::placeholder{color:#4e6075}input:focus,select:focus,textarea:focus{border-color:rgba(220,168,63,.7);box-shadow:0 0 0 3px rgba(220,168,63,.07)}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8c9bae 50%),linear-gradient(135deg,#8c9bae 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 11px) 50%;background-size:4px 4px;background-repeat:no-repeat;padding-right:32px}textarea{min-height:75px;resize:vertical}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.choice{position:relative}.choice input{position:absolute;opacity:0;pointer-events:none}.choice label{display:block;padding:13px;border:1px solid #1c2b3d;border-radius:13px;background:#08121f;cursor:pointer;height:100%;transition:.2s}.choice label strong{display:block;color:#e9eef5;font-size:10px;margin-bottom:3px}.choice label span{display:block;color:#64758a;font-size:8px}.choice input:checked+label{border-color:rgba(220,168,63,.75);background:linear-gradient(145deg,rgba(220,168,63,.13),rgba(220,168,63,.035));box-shadow:inset 0 0 0 1px rgba(220,168,63,.1)}.choice input:checked+label:after{content:"✓";position:absolute;right:9px;top:8px;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#10151c;font-size:9px;font-weight:900}
+.address-card{padding:15px;border-radius:14px;border:1px solid var(--line);background:#08121f}.address-title{font-size:10px;font-weight:800;margin-bottom:11px;color:#dce5ef}.address-title span{color:var(--blue);margin-right:7px}.address-card+.address-card{margin-top:10px}
+.checkrow{display:flex;align-items:flex-start;gap:8px;margin-top:16px;color:#67788d;font-size:8px}.checkrow input{width:auto;margin-top:2px;accent-color:var(--gold)}
+.footer-actions{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:25px;padding-top:20px;border-top:1px solid var(--line)}.hint{font-size:8px;color:#607087;max-width:390px}.submit{min-width:180px}
+
+.summary{padding:25px;position:sticky;top:94px;overflow:hidden}.summary:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-100px;top:-110px;background:rgba(220,168,63,.09);filter:blur(5px)}.summary h3{position:relative;font:800 18px Manrope;letter-spacing:-.035em}.summary-sub{position:relative;color:#68788d;font-size:9px;margin-top:3px}
+.route{position:relative;margin:20px 0;padding:15px;border:1px solid var(--line);border-radius:14px;background:#08121e}.route-line{display:flex;align-items:center;gap:10px}.pin{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:rgba(66,181,255,.09);color:var(--blue);font-size:10px}.route .loc{font-size:9px;font-weight:700}.route small{display:block;color:#607087;font-size:7px;margin-top:1px}.connector{height:18px;border-left:1px dashed #324357;margin:2px 0 2px 12px}
+.summary-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:9px}.summary-row span:first-child{color:#6f8095}.summary-row span:last-child{text-align:right;color:#d8e0ea}.summary-row.total{border:0;padding-top:15px}.summary-row.total span:last-child{font-weight:800;color:var(--gold2)}
+.total-box{margin:15px 0;padding:17px;border-radius:14px;background:linear-gradient(145deg,#172434,#0b1521);border:1px solid rgba(220,168,63,.16)}.total-box label{display:block;font-size:8px;color:#718197;text-transform:uppercase;letter-spacing:.1em}.total-box strong{font:800 27px Manrope;color:var(--gold2);letter-spacing:-.05em}.total-box small{display:block;color:#5f7085;font-size:7px}.notice{padding:11px;border-radius:11px;background:rgba(56,200,139,.05);border:1px solid rgba(56,200,139,.13);font-size:8px;color:#7cae9a}.summary .btn{width:100%;margin-top:10px}
+
+.benefits{padding:70px 0;background:#070e18;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.benefit-head{text-align:center;margin-bottom:30px}.benefit-head h2{font:800 28px Manrope;letter-spacing:-.045em}.benefit-head p{color:#718096;font-size:10px;margin-top:4px}.benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:18px;overflow:hidden}.benefit{padding:22px;text-align:center;border-right:1px solid var(--line)}.benefit:last-child{border:0}.icon{margin:auto;width:38px;height:38px;display:grid;place-items:center;border-radius:12px;color:var(--gold2);background:rgba(220,168,63,.08);border:1px solid rgba(220,168,63,.18)}.benefit h4{font-size:10px;margin:10px 0 3px}.benefit p{font-size:8px;color:#66778c}
+footer{padding:58px 0 20px;background:#03070d;border-top:1px solid var(--line)}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:38px;padding-bottom:40px}.footer-grid h4{font-size:10px;margin-bottom:14px}.footer-grid p,.footer-grid a{display:block;color:#607087;font-size:9px;margin:8px 0}.footer-grid a:hover{color:var(--gold2)}.footer-bottom{border-top:1px solid var(--line);padding-top:17px;color:#47566a;font-size:8px;display:flex;justify-content:space-between}
+.toast{position:fixed;right:22px;bottom:22px;z-index:100;padding:14px 16px;border-radius:13px;background:#0d1927;border:1px solid rgba(220,168,63,.3);box-shadow:var(--shadow);font-size:10px;color:#dce5ef;transform:translateY(30px);opacity:0;pointer-events:none;transition:.3s}.toast.show{transform:none;opacity:1}
+@media(max-width:950px){.links{display:none}.menu{display:block}.layout{grid-template-columns:1fr}.summary{position:static}.benefits-grid{grid-template-columns:1fr 1fr}.benefit:nth-child(2){border-right:0}.benefit:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media(max-width:650px){.topbar{height:66px}.hero{padding:54px 0 42px}.form-card{padding:20px}.steps{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}.choice-grid{grid-template-columns:1fr}.footer-actions{flex-direction:column;align-items:stretch}.submit{width:100%}.benefits-grid{grid-template-columns:1fr}.benefit{border-right:0!important;border-bottom:1px solid var(--line)}.benefit:last-child{border-bottom:0}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:7px}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+ <div class="container nav">
+  <a class="brand" href="#"><div class="logo">RC</div><div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div></a>
+  <nav class="links"><a href="#">Services</a><a href="#">Track Shipment</a><a href="#">Get Quote</a><a href="#">Book Shipment</a><a href="#">Locations</a><a href="#">About Us</a><a href="#">Contact</a></nav>
+  <div class="actions"><button class="btn btn-gold">Login</button><button class="btn btn-dark">Register</button><button class="menu">☰</button></div>
+ </div>
+</header>
+
+<section class="hero">
+ <div class="container">
+  <div class="eyebrow">RC Courier Online Booking</div>
+  <h1>Book your shipment.<br><span>We'll handle the rest.</span></h1>
+  <p>Schedule a pickup across the UAE, GCC or international destinations with a fast, premium booking experience designed for businesses and individuals.</p>
+ </div>
+</section>
+
+<main class="booking">
+ <div class="container layout">
+  <section class="card form-card">
+   <div class="head">
+    <div><h2>Create your shipment</h2><p>Complete the details below to schedule a pickup.</p></div>
+    <div class="secure">✓ SECURE BOOKING</div>
+   </div>
+
+   <div class="steps">
+    <div class="step active"><b>1</b>Route</div>
+    <div class="step active"><b>2</b>Shipment</div>
+    <div class="step active"><b>3</b>Contact</div>
+    <div class="step active"><b>4</b>Confirm</div>
+   </div>
+
+   <form id="bookingForm">
+    <div class="section-label">01 · Route & service</div>
+    <div class="grid">
+     <div class="field"><label for="pickupEmirate">Pickup emirate</label><select id="pickupEmirate" required><option value="">Select Emirates</option><option>Dubai</option><option>Abu Dhabi</option><option>Sharjah</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select></div>
+     <div class="field"><label for="deliveryEmirate">Delivery destination</label><select id="deliveryEmirate" required><option value="">Select destination</option><option>Dubai</option><option>Abu Dhabi</option><option>Sharjah</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option><option>Saudi Arabia</option><option>Oman</option><option>Qatar</option><option>Bahrain</option><option>Kuwait</option><option>International</option></select></div>
+    </div>
+    <div class="section-label">Service type</div>
+    <div class="choice-grid">
+     <div class="choice"><input type="radio" name="service" id="same" value="Same-Day Express" data-rate="35" checked><label for="same"><strong>Same-Day Express</strong><span>Priority UAE delivery</span></label></div>
+     <div class="choice"><input type="radio" name="service" id="next" value="Next-Day Delivery" data-rate="25"><label for="next"><strong>Next-Day Delivery</strong><span>Business-day delivery</span></label></div>
+     <div class="choice"><input type="radio" name="service" id="gcc" value="GCC Road Freight" data-rate="250"><label for="gcc"><strong>GCC Road Freight</strong><span>Door-to-door GCC cargo</span></label></div>
+     <div class="choice"><input type="radio" name="service" id="air" value="International Air" data-rate="450"><label for="air"><strong>International Air</strong><span>Priority worldwide</span></label></div>
+     <div class="choice"><input type="radio" name="service" id="heavy" value="Heavy Freight" data-rate="650"><label for="heavy"><strong>Heavy Freight</strong><span>FTL & logistics</span></label></div>
+     <div class="choice"><input type="radio" name="service" id="ecom" value="E-Commerce Logistics" data-rate="30"><label for="ecom"><strong>E-Commerce</strong><span>Last-mile delivery</span></label></div>
+    </div>
+
+    <div class="section-label">02 · Pickup & delivery</div>
+    <div class="address-card">
+     <div class="address-title"><span>●</span> Pickup address</div>
+     <div class="grid">
+      <div class="field full"><label for="pickupAddress">Street / building / office</label><input id="pickupAddress" placeholder="Building name, street and area" required></div>
+      <div class="field"><label for="pickupArea">Area</label><input id="pickupArea" placeholder="e.g. Al Quoz" required></div>
+      <div class="field"><label for="pickupCity">City</label><input id="pickupCity" placeholder="Dubai" required></div>
+      <div class="field"><label for="pickupContact">Contact person</label><input id="pickupContact" placeholder="Name" required></div>
+      <div class="field"><label for="pickupPhone">Phone</label><input id="pickupPhone" type="tel" placeholder="+971 5X XXX XXXX" required></div>
+     </div>
+    </div>
+    <div class="address-card">
+     <div class="address-title"><span style="color:var(--green)">●</span> Delivery address</div>
+     <div class="grid">
+      <div class="field full"><label for="deliveryAddress">Street / building / office</label><input id="deliveryAddress" placeholder="Building name, street and area" required></div>
+      <div class="field"><label for="deliveryArea">Area</label><input id="deliveryArea" placeholder="e.g. Business Bay" required></div>
+      <div class="field"><label for="deliveryCity">City / destination</label><input id="deliveryCity" placeholder="Dubai" required></div>
+      <div class="field"><label for="receiver">Receiver name</label><input id="receiver" placeholder="Recipient name" required></div>
+      <div class="field"><label for="receiverPhone">Receiver phone</label><input id="receiverPhone" type="tel" placeholder="+971 5X XXX XXXX" required></div>
+     </div>
+    </div>
+
+    <div class="section-label">03 · Package details</div>
+    <div class="grid">
+     <div class="field"><label for="pieces">Pieces</label><input id="pieces" type="number" min="1" value="1" required></div>
+     <div class="field"><label for="weight">Total weight (KG)</label><input id="weight" type="number" min=".1" step=".1" value="1" required></div>
+     <div class="field"><label for="length">Length (CM)</label><input id="length" type="number" min="1" value="20"></div>
+     <div class="field"><label for="width">Width (CM)</label><input id="width" type="number" min="1" value="15"></div>
+     <div class="field"><label for="height">Height (CM)</label><input id="height" type="number" min="1" value="10"></div>
+     <div class="field"><label for="declaredValue">Declared value (AED)</label><input id="declaredValue" type="number" min="0" value="0" placeholder="0"></div>
+     <div class="field full"><label for="contents">Package contents</label><input id="contents" placeholder="e.g. Documents, electronics, clothing" required></div>
+     <div class="field full"><label for="instructions">Special handling / delivery instructions</label><textarea id="instructions" placeholder="Fragile, call before delivery, preferred pickup window, etc."></textarea></div>
+    </div>
+
+    <div class="section-label">04 · Pickup schedule</div>
+    <div class="grid">
+     <div class="field"><label for="pickupDate">Preferred pickup date</label><input id="pickupDate" type="date" required></div>
+     <div class="field"><label for="pickupTime">Preferred pickup window</label><select id="pickupTime" required><option value="">Select time</option><option>08:00 AM – 10:00 AM</option><option>10:00 AM – 12:00 PM</option><option>12:00 PM – 02:00 PM</option><option>02:00 PM – 04:00 PM</option><option>04:00 PM – 06:00 PM</option><option>06:00 PM – 08:00 PM</option></select></div>
+    </div>
+
+    <div class="section-label">05 · Customer details</div>
+    <div class="grid">
+     <div class="field"><label for="name">Full name</label><input id="name" placeholder="Your full name" required></div>
+     <div class="field"><label for="phone">Mobile number</label><input id="phone" type="tel" placeholder="+971 5X XXX XXXX" required></div>
+     <div class="field"><label for="email">Email address</label><input id="email" type="email" placeholder="you@company.com" required></div>
+     <div class="field"><label for="company">Company (optional)</label><input id="company" placeholder="Company name"></div>
+    </div>
+
+    <div class="checkrow"><input id="terms" type="checkbox" required><label for="terms">I confirm the shipment information is accurate and agree to RC Courier's booking, service and prohibited-items terms.</label></div>
+    <div class="footer-actions"><div class="hint">Your booking request will receive a unique shipment/booking reference. Final charges are subject to verified shipment details and applicable UAE/GCC surcharges.</div><button class="btn btn-gold submit" type="submit">Confirm Booking →</button></div>
+   </form>
+  </section>
+
+  <aside class="card summary">
+   <h3>Booking summary</h3><p class="summary-sub">Live estimate · AED</p>
+   <div class="route">
+    <div class="route-line"><div class="pin">A</div><div><div class="loc" id="sumPickup">Pickup location</div><small id="sumPickupSub">Select an emirate</small></div></div>
+    <div class="connector"></div>
+    <div class="route-line"><div class="pin" style="color:var(--green);background:rgba(56,200,139,.08)">B</div><div><div class="loc" id="sumDelivery">Delivery destination</div><small id="sumDeliverySub">Select a destination</small></div></div>
+   </div>
+   <div class="summary-row"><span>Service</span><span id="sumService">Same-Day Express</span></div>
+   <div class="summary-row"><span>Pieces</span><span id="sumPieces">1</span></div>
+   <div class="summary-row"><span>Chargeable weight</span><span id="sumWeight">1.0 KG</span></div>
+   <div class="summary-row"><span>Estimated delivery</span><span id="sumEta">Same day</span></div>
+   <div class="total-box"><label>Estimated total</label><strong id="sumTotal">AED 36.75</strong><small>Including 5% UAE VAT · estimate</small></div>
+   <div class="notice">✓ Secure booking flow. Your final production price should be calculated server-side using the RC Courier MySQL rate engine.</div>
+   <button class="btn btn-dark" type="button" onclick="window.print()">Print Summary</button>
+  </aside>
+ </div>
+</main>
+
+<section class="benefits">
+ <div class="container">
+  <div class="benefit-head"><h2>A booking experience built for modern logistics.</h2><p>Fast for individuals. Powerful enough for UAE businesses.</p></div>
+  <div class="benefits-grid">
+   <div class="benefit"><div class="icon">↗</div><h4>Fast Pickup</h4><p>Choose a preferred pickup date and time window.</p></div>
+   <div class="benefit"><div class="icon">AED</div><h4>Transparent AED</h4><p>Keep customer pricing clear with VAT-aware totals.</p></div>
+   <div class="benefit"><div class="icon">✓</div><h4>Reference Ready</h4><p>Generate a unique booking reference after confirmation.</p></div>
+   <div class="benefit"><div class="icon">◈</div><h4>Business Ready</h4><p>Designed for corporate accounts, invoices and tracking.</p></div>
+  </div>
+ </div>
+</section>
+
+<footer>
+ <div class="container">
+  <div class="footer-grid">
+   <div><a class="brand" href="#"><div class="logo">RC</div><div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div></a><p style="max-width:300px;margin-top:14px">Premium courier, express delivery and logistics solutions across the UAE, GCC and international destinations.</p></div>
+   <div><h4>Services</h4><a href="#">Same-Day Delivery</a><a href="#">Next-Day Delivery</a><a href="#">GCC Road Freight</a><a href="#">International Air</a><a href="#">E-Commerce Logistics</a></div>
+   <div><h4>Company</h4><a href="#">About RC Courier</a><a href="#">Our Hubs & Coverage</a><a href="#">Contact Us</a><a href="#">Corporate Solutions</a></div>
+   <div><h4>Quick Links</h4><a href="#">Track Shipment</a><a href="#">Get a Quote</a><a href="#">Book Shipment</a><p>Dubai, United Arab Emirates</p><p>+971 4 XXX XXXX</p><p>support@rccourier.ae</p></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 RC Courier UAE. All rights reserved.</span><span>UAE • GCC • Worldwide</span></div>
+ </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const form=document.getElementById('bookingForm'),toast=document.getElementById('toast');
+const date=document.getElementById('pickupDate');
+const today=new Date(); today.setMinutes(today.getMinutes()-today.getTimezoneOffset()); date.min=today.toISOString().slice(0,10);
+
+function money(v){return 'AED '+v.toFixed(2)}
+function calc(){
+ const service=document.querySelector('input[name="service"]:checked');
+ const base=Number(service.dataset.rate||0),weight=Math.max(.1,Number(document.getElementById('weight').value)||.1),pieces=Math.max(1,Number(document.getElementById('pieces').value)||1);
+ const vol=((Number(document.getElementById('length').value)||0)*(Number(document.getElementById('width').value)||0)*(Number(document.getElementById('height').value)||0))/5000;
+ const charge=Math.max(weight,vol),extra=Math.max(0,charge-1)*3,handling=Math.max(0,pieces-1)*2;
+ const subtotal=base+extra+handling,vat=subtotal*.05,total=subtotal+vat;
+ document.getElementById('sumService').textContent=service.value;
+ document.getElementById('sumPieces').textContent=pieces;
+ document.getElementById('sumWeight').textContent=charge.toFixed(1)+' KG';
+ document.getElementById('sumTotal').textContent=money(total);
+ const eta=service.value.includes('Same')?'Same day':service.value.includes('Next')?'Next business day':service.value.includes('GCC')?'GCC transit time':'Transit time varies';
+ document.getElementById('sumEta').textContent=eta;
+ document.getElementById('sumPickup').textContent=document.getElementById('pickupEmirate').value||'Pickup location';
+ document.getElementById('sumDelivery').textContent=document.getElementById('deliveryEmirate').value||'Delivery destination';
+ document.getElementById('sumPickupSub').textContent=document.getElementById('pickupCity').value||'Select an emirate';
+ document.getElementById('sumDeliverySub').textContent=document.getElementById('deliveryCity').value||'Select a destination';
+}
+form.addEventListener('input',calc);form.addEventListener('change',calc);
+form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;calc();showToast('Booking details validated. Connect this action to your secure PHP/MySQL booking workflow.');});
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(window.t);window.t=setTimeout(()=>toast.classList.remove('show'),4200)}
+calc();
+</script>
+</body>
+</html>

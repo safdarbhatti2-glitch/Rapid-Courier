@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RC Courier — Shipment Tracking</title>
+<meta name="description" content="RC Courier UAE shipment tracking and delivery status portal.">
+<style>
+:root{
+  --bg:#f5f8fc;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --ink:#0b1830;
+  --muted:#66758b;
+  --line:#dce4ee;
+  --gold:#dcae3f;
+  --gold-2:#f3c85c;
+  --blue:#138fd1;
+  --green:#13a56b;
+  --red:#e05252;
+  --shadow:0 24px 70px rgba(15,32,54,.10);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(220,174,63,.10),transparent 28%),
+    linear-gradient(180deg,#f8fafc 0%,#eef3f8 100%);
+  line-height:1.5;
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1120px,calc(100% - 40px));margin:auto}
+.topbar{
+  height:76px;background:#07101f;color:#fff;border-bottom:1px solid #1d2b40;
+  position:sticky;top:0;z-index:50;
+}
+.nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:-.5px}
+.logo{
+  width:42px;height:42px;border:1px solid rgba(243,200,92,.65);border-radius:12px;
+  display:grid;place-items:center;color:var(--gold-2);font-weight:900;background:#101b2c;
+}
+.brand small{display:block;color:#eabf52;font-size:8px;letter-spacing:1.2px;margin-top:-2px}
+.navlinks{display:flex;gap:25px;color:#bdc9d9;font-size:13px;font-weight:600}
+.navlinks a:hover{color:#fff}
+.nav-actions{display:flex;gap:10px}
+.btn{
+  border:1px solid var(--line);border-radius:11px;padding:11px 17px;
+  background:#fff;color:var(--ink);font-weight:800;cursor:pointer;
+}
+.btn-gold{background:linear-gradient(135deg,#f5cb68,#dcae3f);border-color:#e1b34b;color:#101827}
+.btn-dark{background:#0b1830;border-color:#26364d;color:#fff}
+.hero{padding:90px 0 45px;text-align:center}
+.eyebrow{
+  color:#b18221;text-transform:uppercase;letter-spacing:2.5px;font-size:11px;font-weight:900;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.eyebrow:before,.eyebrow:after{content:"";width:30px;height:1px;background:#d6aa45}
+.hero h1{font-size:clamp(42px,6vw,74px);line-height:.98;letter-spacing:-4px;margin:20px auto 18px;max-width:850px}
+.hero h1 span{color:#d7a52f}
+.hero p{max-width:700px;margin:auto;color:var(--muted);font-size:15px}
+.search{
+  max-width:760px;margin:32px auto 0;padding:9px;background:#fff;border:1px solid var(--line);
+  border-radius:17px;box-shadow:var(--shadow);display:flex;gap:9px;
+}
+.search input{
+  flex:1;min-width:0;border:0;outline:0;background:#f5f7fa;border-radius:11px;
+  padding:16px 18px;font-size:15px;color:var(--ink)
+}
+.search button{min-width:160px}
+.examples{margin-top:12px;font-size:11px;color:#7b899c}
+.examples b{color:#31415a}
+.result{
+  margin:35px auto 100px;max-width:900px;background:var(--surface);border:1px solid var(--line);
+  border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
+}
+.result-head{
+  padding:25px 28px;background:#0b1830;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px
+}
+.ref-label{text-transform:uppercase;font-size:9px;letter-spacing:1.7px;color:#91a3ba}
+.reference{font-size:24px;font-weight:900;margin-top:4px}
+.status{
+  padding:8px 13px;border-radius:999px;background:rgba(19,165,107,.13);
+  color:#57dda4;border:1px solid rgba(19,165,107,.45);font-size:10px;font-weight:900;letter-spacing:.7px
+}
+.parties{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:24px 28px;background:#fbfcfe;border-bottom:1px solid var(--line)
+}
+.party{padding:18px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.party .label{font-size:10px;font-weight:900;color:#7b899c;text-transform:uppercase;letter-spacing:1px}
+.party .name{font-size:18px;font-weight:900;margin:7px 0 3px}
+.party .place{font-size:12px;color:var(--muted)}
+.ship-date{
+  margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:12px;
+}
+.ship-date b{color:var(--ink)}
+.details{display:grid;grid-template-columns:1.4fr .8fr}
+.journey{padding:28px}
+.section-title{font-size:14px;font-weight:900;margin-bottom:23px}
+.timeline{position:relative}
+.timeline:before{
+  content:"";position:absolute;left:12px;top:10px;bottom:12px;width:2px;background:#dce5ee
+}
+.event{position:relative;padding:0 0 25px 38px}
+.event:last-child{padding-bottom:0}
+.dot{
+  position:absolute;left:5px;top:1px;width:16px;height:16px;border-radius:50%;
+  background:#fff;border:2px solid #cbd6e3;z-index:1
+}
+.event.done .dot{background:#18a971;border-color:#18a971;box-shadow:0 0 0 4px rgba(24,169,113,.10)}
+.event.current .dot{background:#dcae3f;border-color:#dcae3f;box-shadow:0 0 0 5px rgba(220,174,63,.13)}
+.event-title{font-size:13px;font-weight:900}
+.event-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.event-time{font-size:10px;color:#8291a4;margin-top:3px}
+.side{
+  border-left:1px solid var(--line);padding:28px;background:#fbfcfe
+}
+.info{padding:14px 0;border-bottom:1px solid var(--line)}
+.info:first-of-type{padding-top:0}
+.info:last-of-type{border-bottom:0}
+.info label{display:block;text-transform:uppercase;letter-spacing:1px;font-size:8px;font-weight:900;color:#8b98aa}
+.info strong{display:block;font-size:13px;margin-top:4px}
+.side-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.feature-section{padding:80px 0}
+.section-heading{text-align:center;max-width:680px;margin:auto}
+.section-heading h2{font-size:42px;line-height:1.05;letter-spacing:-2px;margin:15px 0 10px}
+.section-heading p{color:var(--muted)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:35px}
+.feature{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 12px 35px rgba(15,32,54,.06)
+}
+.icon{width:42px;height:42px;border-radius:12px;background:#fff7df;color:#ad7c16;display:grid;place-items:center;font-weight:900;border:1px solid #f0ddb0}
+.feature h3{font-size:15px;margin:16px 0 6px}
+.feature p{font-size:11px;color:var(--muted);margin:0}
+.stats{
+  margin:0 0 75px;border:1px solid var(--line);background:#fff;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden
+}
+.stat{text-align:center;padding:24px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat strong{display:block;color:#c08d20;font-size:25px}
+.stat span{font-size:10px;color:var(--muted)}
+.cta{
+  background:linear-gradient(135deg,#d69e28,#f1c454);border-radius:20px;padding:27px 30px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:80px
+}
+.cta h3{margin:0;font-size:22px}.cta p{margin:4px 0 0;font-size:11px;color:#4f3a0d}
+footer{background:#07101f;color:#9aaabd;padding:55px 0 25px}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:35px}
+footer h4{color:#fff;margin:0 0 15px;font-size:13px}
+footer p,footer a{font-size:11px;color:#8fa0b4;display:block;margin:8px 0}
+.footer-brand{color:#fff;font-weight:900;font-size:16px}
+.footer-brand span{color:#e9bc4f}
+.copyright{border-top:1px solid #1b293c;margin-top:35px;padding-top:20px;display:flex;justify-content:space-between;font-size:10px}
+.empty{display:none;padding:50px;text-align:center;color:var(--muted)}
+@media(max-width:850px){
+  .navlinks{display:none}
+  .container{width:min(100% - 24px,720px)}
+  .hero{padding-top:60px}
+  .hero h1{letter-spacing:-2px}
+  .parties,.details{grid-template-columns:1fr}
+  .side{border-left:0;border-top:1px solid var(--line)}
+  .features{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-actions .btn-dark{display:none}
+  .search{flex-direction:column}
+  .search button{width:100%}
+  .result-head{align-items:flex-start;flex-direction:column}
+  .parties,.journey,.side{padding:20px}
+  .features,.stats{grid-template-columns:1fr}
+  .stat{border-right:0;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:0}
+  .cta{flex-direction:column;align-items:flex-start}
+  .footer-grid{grid-template-columns:1fr}
+  .copyright{flex-direction:column;gap:8px}
+}
+@media print{
+  .topbar,.hero,.feature-section,.stats,.cta,footer{display:none!important}
+  body{background:#fff}
+  .result{box-shadow:none;border:1px solid #bbb;margin:0;max-width:none}
+  .result-head{background:#fff;color:#000;border-bottom:1px solid #bbb}
+  .status{color:#087a4e;border-color:#087a4e;background:#fff}
+  .parties,.side{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="#">
+      <div class="logo">RC</div>
+      <div>COURIER<small>UAE • GCC LOGISTICS</small></div>
+    </a>
+    <nav class="navlinks">
+      <a href="#">Services</a><a href="#">Track Shipment</a><a href="#">Get Quote</a>
+      <a href="#">Book Shipment</a><a href="#">Locations</a><a href="#">About Us</a><a href="#">Contact</a>
+    </nav>
+    <div class="nav-actions"><a class="btn btn-gold" href="#">Dashboard</a></div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="container">
+    <div class="eyebrow">RC Courier Shipment Intelligence</div>
+    <h1>Track every shipment.<br><span>Know every milestone.</span></h1>
+    <p>Enter your Waybill Reference or Tracking Number to view shipment status, movement history, estimated delivery and proof-of-delivery information.</p>
+
+    <form class="search" id="trackingForm">
+      <input id="trackingInput" value="AE-909CC-2026" placeholder="Enter tracking or waybill reference" aria-label="Tracking number">
+      <button class="btn btn-gold" type="submit">Track Shipment</button>
+    </form>
+    <div class="examples">Try demo: <b>AE-909CC-2026</b> &nbsp;•&nbsp; Waybill: <b>SHP-2026-000001</b></div>
+  </div>
+</section>
+
+<section class="container">
+  <article class="result" id="trackingResult">
+    <div class="result-head">
+      <div>
+        <div class="ref-label">Shipment Reference</div>
+        <div class="reference" id="ref">AE-909CC-2026</div>
+      </div>
+      <div class="status" id="status">● DELIVERED</div>
+    </div>
+
+    <div class="parties">
+      <div class="party">
+        <div class="label">Sender / Shipper</div>
+        <div class="name" id="sender">Omar Al-Zaabi</div>
+        <div class="place" id="origin">Dubai, United Arab Emirates</div>
+        <div class="ship-date">Shipment Date: <b id="shipDate">26 Aug 2026</b></div>
+      </div>
+      <div class="party">
+        <div class="label">Receiver / Consignee</div>
+        <div class="name" id="receiver">Valued Consignee</div>
+        <div class="place" id="destination">Abu Dhabi, United Arab Emirates</div>
+        <div class="ship-date">Estimated Delivery: <b id="delivery">27 Aug 2026 • Before 6:00 PM</b></div>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="journey">
+        <div class="section-title">Shipment Journey</div>
+        <div class="timeline">
+          <div class="event done"><span class="dot"></span><div class="event-title">BOOKED</div><div class="event-meta">Dubai Dispatch Center — Shipment created</div><div class="event-time">26 Aug 2026 • 08:36 AM</div></div>
+          <div class="event done"><span class="dot"></span><div class="event-title">PICKED UP</div><div class="event-meta">Dubai Local Station — Parcel collected</div><div class="event-time">26 Aug 2026 • 10:45 AM</div></div>
+          <div class="event done"><span class="dot"></span><div class="event-title">AT ORIGIN HUB</div><div class="event-meta">Dubai Central Sorting Hub — Processed</div><div class="event-time">26 Aug 2026 • 12:20 PM</div></div>
+          <div class="event done"><span class="dot"></span><div class="event-title">IN TRANSIT</div><div class="event-meta">E11 Sheikh Zayed Highway — En route</div><div class="event-time">26 Aug 2026 • 02:41 PM</div></div>
+          <div class="event current"><span class="dot"></span><div class="event-title">DELIVERED</div><div class="event-meta">Abu Dhabi Destination Address — Successfully delivered</div><div class="event-time">26 Aug 2026 • 05:32 PM</div></div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="section-title">Shipment Details</div>
+        <div class="info"><label>Service</label><strong id="service">Next-Day Delivery</strong></div>
+        <div class="info"><label>Origin</label><strong id="origin2">Dubai</strong></div>
+        <div class="info"><label>Destination</label><strong id="destination2">Abu Dhabi</strong></div>
+        <div class="info"><label>Package</label><strong>1 Parcel • 8.00 KG</strong></div>
+        <div class="info"><label>Last Updated</label><strong>26 Aug 2026 • 05:32 PM</strong></div>
+        <div class="side-actions"><button class="btn btn-gold" onclick="window.print()">Print</button><button class="btn btn-dark" onclick="alert('Proof of Delivery will be connected to your PHP/MySQL system.')">Proof of Delivery</button></div>
+      </aside>
+    </div>
+  </article>
+</section>
+
+<section class="feature-section">
+  <div class="container">
+    <div class="section-heading">
+      <div class="eyebrow">Built for visibility</div>
+      <h2>A better tracking experience for UAE customers.</h2>
+      <p>Give customers a clean, trustworthy view of their shipment without exposing internal operational data.</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="icon">◉</div><h3>Real-Time Milestones</h3><p>Display booking, pickup, hub processing, dispatch, out-for-delivery and delivery events from your shipment database.</p></div>
+      <div class="feature"><div class="icon">✦</div><h3>Smart ETA</h3><p>Show an estimated delivery window based on service, route and operational status.</p></div>
+      <div class="feature"><div class="icon">✓</div><h3>Digital POD</h3><p>Make delivery confirmation, recipient details and proof-of-delivery information easy to access.</p></div>
+      <div class="feature"><div class="icon">⌁</div><h3>UAE + GCC Coverage</h3><p>Present UAE and GCC routes with location-aware shipment milestones.</p></div>
+      <div class="feature"><div class="icon">▣</div><h3>Secure Customer View</h3><p>Expose only the shipment information the customer is authorized to see.</p></div>
+      <div class="feature"><div class="icon">↗</div><h3>Operations Ready</h3><p>Designed to connect cleanly to a PHP/MySQL shipment management system.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="stats">
+    <div class="stat"><strong>7</strong><span>UAE Emirates</span></div>
+    <div class="stat"><strong>6</strong><span>GCC Markets</span></div>
+    <div class="stat"><strong>24/7</strong><span>Online Tracking</span></div>
+    <div class="stat"><strong>220+</strong><span>Global Destinations</span></div>
+  </div>
+
+  <div class="cta">
+    <div><h3>Can't find your shipment?</h3><p>Speak with the RC Courier support team and provide your reference number.</p></div>
+    <div><a class="btn btn-dark" href="#">Contact Support</a> <a class="btn" href="#">Track Another</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div><div class="footer-brand"><span>RC</span> COURIER</div><p>Premium courier, express delivery and logistics solutions across all 7 UAE Emirates, GCC and international destinations.</p></div>
+      <div><h4>Services</h4><a href="#">Same-Day Delivery</a><a href="#">Next-Day Delivery</a><a href="#">GCC Road Freight</a><a href="#">International Air</a><a href="#">E-Commerce Logistics</a></div>
+      <div><h4>Company</h4><a href="#">About RC Courier</a><a href="#">Our Hubs & Coverage</a><a href="#">Contact Us</a><a href="#">Corporate Solutions</a></div>
+      <div><h4>Quick Links</h4><a href="#">Track Shipment</a><a href="#">Get a Quote</a><a href="#">Book Shipment</a><a href="#">Dubai, United Arab Emirates</a><a href="#">support@rccourier.ae</a></div>
+    </div>
+    <div class="copyright"><span>© 2026 RC Courier UAE LLC. All rights reserved.</span><span>UAE • GCC • Worldwide</span></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('trackingForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const value=document.getElementById('trackingInput').value.trim();
+  if(!value){ alert('Please enter a tracking or waybill reference.'); return; }
+  document.getElementById('ref').textContent=value.toUpperCase();
+  document.getElementById('trackingResult').scrollIntoView({behavior:'smooth',block:'center'});
+});
+</script>
+</body>
+</html>

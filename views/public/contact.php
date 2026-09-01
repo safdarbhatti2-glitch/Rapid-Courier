@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Contact RC Courier UAE — speak with our courier, logistics and customer support team.">
+<title><?= e($title ?? 'Contact Us | RC Courier UAE') ?></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050a12;--panel:#0b1522;--panel2:#0f1b2a;--gold:#dca83f;--gold2:#f5ce73;--white:#f8fafc;--muted:#8797aa;--line:rgba(255,255,255,.085);--blue:#42b5ff;--green:#42d39a;--shadow:0 30px 90px rgba(0,0,0,.42)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--white);line-height:1.5}a{text-decoration:none;color:inherit}.container{width:min(1120px,92%);margin:auto}
+.topbar{height:74px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{display:flex;align-items:center;gap:9px;font-family:Manrope;font-weight:800;white-space:nowrap}.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);border:1px solid rgba(220,168,63,.5);background:linear-gradient(145deg,#172334,#080d15);font-size:13px}.brand span{font-size:15px;letter-spacing:-.045em}.brand small{display:block;color:var(--gold);font:700 6px Inter;letter-spacing:.12em}.links{display:flex;gap:21px;color:#aebaca;font-size:11px}.links a:hover{color:#fff}.actions{display:flex;gap:8px}.btn{border:0;border-radius:11px;padding:11px 17px;font-size:11px;font-weight:800;transition:.25s;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#10151c;box-shadow:0 10px 30px rgba(220,168,63,.14)}.btn-gold:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(220,168,63,.28)}.btn-dark{background:#0d1724;color:#fff;border:1px solid var(--line)}.menu{display:none;background:none;border:0;color:#fff;font-size:24px}
+
+.hero{position:relative;overflow:hidden;padding:78px 0 82px;text-align:center;background:radial-gradient(circle at 50% 0,rgba(220,168,63,.14),transparent 31%),radial-gradient(circle at 9% 60%,rgba(66,181,255,.08),transparent 25%),linear-gradient(180deg,#070d17,#050a12)}.hero:before{content:"";position:absolute;inset:0;opacity:.17;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(#000,transparent)}.eyebrow{position:relative;display:inline-flex;align-items:center;gap:9px;color:var(--gold2);font-size:9px;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.eyebrow:before,.eyebrow:after{content:"";height:1px;width:25px;background:var(--gold)}.hero h1{position:relative;font:800 clamp(43px,6vw,66px)/1.02 Manrope;letter-spacing:-.065em;margin:17px auto 15px}.hero h1 span{background:linear-gradient(90deg,#fff,var(--gold2));color:transparent;background-clip:text;-webkit-background-clip:text}.hero p{position:relative;max-width:690px;margin:auto;color:var(--muted);font-size:12px}.hero-pills{position:relative;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:25px}.hero-pill{padding:9px 13px;border:1px solid var(--line);background:rgba(10,20,32,.68);border-radius:30px;color:#91a0b3;font-size:8px}.hero-pill strong{color:#fff;margin-right:3px}
+
+.contact{padding:0 0 82px}.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:16px;margin-top:-35px;position:relative;z-index:2}
+.info,.form{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#0d1826,#09121e);box-shadow:var(--shadow)}.info{padding:29px;overflow:hidden;position:relative}.info:after{content:"RC";position:absolute;right:-20px;bottom:-42px;font:800 150px Manrope;color:rgba(255,255,255,.022)}.info h2,.form h2{font:800 22px Manrope;letter-spacing:-.04em}.sub{color:#68788d;font-size:9px;margin-top:4px}.info-list{margin-top:26px;display:grid;gap:9px}.info-item{display:flex;gap:12px;align-items:flex-start;padding:13px;border:1px solid var(--line);background:#08121f;border-radius:13px;position:relative}.icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:10px;background:rgba(220,168,63,.08);border:1px solid rgba(220,168,63,.15);color:var(--gold2);font-size:9px;font-weight:800}.info-item h3{font-size:10px;margin-bottom:2px}.info-item p,.info-item a{font-size:8px;color:#65768b;display:block}.info-item a:hover{color:var(--gold2)}.hours{margin-top:13px;padding:14px;border:1px solid rgba(66,181,255,.12);background:rgba(66,181,255,.045);border-radius:13px;font-size:8px;color:#718398}.hours strong{color:#dce5ef}.online{display:flex;align-items:center;gap:7px;margin-top:15px;color:#7bdfb0;font-size:8px;font-weight:800}.online:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(66,211,154,.65)}
+
+.form{padding:29px}.form-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:23px}.secure{font-size:8px;font-weight:800;color:#8de2ba;background:rgba(56,200,139,.08);border:1px solid rgba(56,200,139,.18);border-radius:20px;padding:7px 9px;white-space:nowrap}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}label{font-size:9px;color:#94a2b5;font-weight:700}input,select,textarea{width:100%;border:1px solid #1c2b3d;background:#07111d;color:#e9eef5;border-radius:11px;padding:12px 13px;outline:0;font-size:10px;transition:.2s}input::placeholder,textarea::placeholder{color:#4e6075}input:focus,select:focus,textarea:focus{border-color:rgba(220,168,63,.7);box-shadow:0 0 0 3px rgba(220,168,63,.07)}select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8c9bae 50%),linear-gradient(135deg,#8c9bae 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 11px) 50%;background-size:4px 4px;background-repeat:no-repeat;padding-right:32px}textarea{min-height:132px;resize:vertical}.topic-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:7px}.topic{position:relative}.topic input{position:absolute;opacity:0;pointer-events:none}.topic label{display:block;text-align:center;padding:11px 5px;border:1px solid #1c2b3d;border-radius:11px;background:#08121f;cursor:pointer;color:#728297;transition:.2s}.topic input:checked+label{color:#f4d47f;border-color:rgba(220,168,63,.7);background:rgba(220,168,63,.08)}.check{display:flex;gap:8px;margin-top:15px;color:#66788d;font-size:8px}.check input{width:auto;margin-top:2px;accent-color:var(--gold)}.form-actions{display:flex;justify-content:space-between;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:19px;margin-top:21px}.form-actions p{font-size:8px;color:#607087;max-width:420px}.submit{min-width:160px}
+
+.quick{padding:80px 0;background:#070e18;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.title{text-align:center;margin-bottom:34px}.title .eyebrow{font-size:8px}.title h2{font:800 30px Manrope;letter-spacing:-.05em;margin:10px 0 5px}.title p{font-size:10px;color:#68788d}.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.quick-card{padding:23px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#0d1826,#09121e);transition:.25s}.quick-card:hover{transform:translateY(-4px);border-color:rgba(220,168,63,.28)}.quick-card .qicon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);background:rgba(220,168,63,.08);border:1px solid rgba(220,168,63,.16);font-size:9px;font-weight:800}.quick-card h3{font-size:11px;margin:13px 0 5px}.quick-card p{font-size:8px;color:#68788d;min-height:35px}.quick-card a{display:inline-block;color:var(--gold2);font-size:8px;font-weight:800;margin-top:11px}
+
+.map-section{padding:82px 0}.map-wrap{display:grid;grid-template-columns:1fr .9fr;gap:15px}.map{min-height:330px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:radial-gradient(circle at 48% 45%,rgba(220,168,63,.15),transparent 15%),radial-gradient(circle at 52% 52%,rgba(66,181,255,.07),transparent 40%),#07101a;box-shadow:var(--shadow)}.map:before{content:"";position:absolute;inset:0;background-image:linear-gradient(30deg,transparent 48%,rgba(255,255,255,.035) 49%,transparent 50%),linear-gradient(120deg,transparent 48%,rgba(255,255,255,.035) 49%,transparent 50%);background-size:50px 50px;transform:scale(1.3) rotate(-7deg);opacity:.5}.map:after{content:"UAE • GCC • INTERNATIONAL";position:absolute;left:22px;bottom:18px;color:#4d6076;font-size:7px;letter-spacing:.18em}.map-box{position:absolute;left:20px;top:19px;padding:9px 11px;border:1px solid var(--line);background:rgba(6,13,22,.8);border-radius:11px;font-size:8px;color:#7d8ea4;z-index:2}.map-box strong{display:block;color:#fff;font-size:9px}.m-route{position:absolute;width:64%;height:45%;left:21%;top:28%;border:1px dashed rgba(220,168,63,.32);border-radius:50%;transform:rotate(-13deg)}.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--gold2);box-shadow:0 0 0 6px rgba(220,168,63,.09),0 0 20px rgba(220,168,63,.35);z-index:2}.p1{left:51%;top:44%}.p2{left:39%;top:58%}.p3{left:63%;top:28%}.p4{left:68%;top:43%}.map-label{position:absolute;color:#dce5ef;font-size:7px;font-weight:800;z-index:3}.l1{left:54%;top:46%}.l2{left:33%;top:62%}.l3{left:66%;top:24%}.l4{left:72%;top:45%}.map-info{padding:29px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#0d1826,#09121e)}.map-info h2{font:800 23px Manrope;letter-spacing:-.04em}.map-info p{font-size:9px;color:#6d7e92;margin-top:7px}.coverage-list{display:grid;gap:8px;margin-top:20px}.coverage{display:flex;justify-content:space-between;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#08121f;font-size:8px}.coverage span:first-child{color:#8493a6}.coverage span:last-child{color:#e2e8ef;font-weight:700}.map-info .btn{margin-top:17px}
+
+.cta{padding:65px 0;text-align:center;background:radial-gradient(circle at 50% 0,rgba(220,168,63,.12),transparent 48%),#07101a;border-top:1px solid var(--line)}.cta h2{font:800 30px Manrope;letter-spacing:-.05em}.cta p{font-size:10px;color:#718096;margin:6px auto 18px}.cta .btn{margin:0 4px}
+
+footer{padding:58px 0 20px;background:#03070d;border-top:1px solid var(--line)}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:38px;padding-bottom:40px}.footer-grid h4{font-size:10px;margin-bottom:14px}.footer-grid p,.footer-grid a{display:block;color:#607087;font-size:9px;margin:8px 0}.footer-grid a:hover{color:var(--gold2)}.footer-bottom{border-top:1px solid var(--line);padding-top:17px;color:#47566a;font-size:8px;display:flex;justify-content:space-between}
+.toast{position:fixed;right:22px;bottom:22px;z-index:100;padding:14px 16px;border-radius:13px;background:#0d1927;border:1px solid rgba(220,168,63,.3);box-shadow:var(--shadow);font-size:10px;color:#dce5ef;transform:translateY(30px);opacity:0;pointer-events:none;transition:.3s}.toast.show{transform:none;opacity:1}
+.alert { padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.9rem; }
+.alert-success { background: rgba(53,197,138,.15); color: #6ee7b7; border: 1px solid rgba(53,197,138,.3); }
+.alert-error { background: rgba(225,29,72,.15); color: #fda4af; border: 1px solid rgba(225,29,72,.3); }
+
+@media(max-width:950px){.links{display:none}.menu{display:block}.contact-grid,.map-wrap{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.hero{padding:58px 0 65px}.hero h1{font-size:43px}.contact-grid{margin-top:-25px}.form,.info{padding:21px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.topic-grid{grid-template-columns:1fr 1fr}.quick-grid,.footer-grid{grid-template-columns:1fr}.form-actions{flex-direction:column;align-items:stretch}.submit{width:100%}.map{min-height:285px}.footer-bottom{flex-direction:column;gap:7px}.actions .btn{display:none}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+ <div class="container nav">
+  <a class="brand" href="<?= \App\Core\View::url('/') ?>">
+    <div class="logo" style="padding:0; border:none; background:transparent;"><img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:42px; width:42px; border-radius:10px; object-fit:cover;"></div>
+    <div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div>
+  </a>
+  <nav class="links">
+    <a href="<?= \App\Core\View::url('/services') ?>">Services</a>
+    <a href="<?= \App\Core\View::url('/track') ?>">Track Shipment</a>
+    <a href="<?= \App\Core\View::url('/quote') ?>">Get Quote</a>
+    <a href="<?= \App\Core\View::url('/book') ?>">Book Shipment</a>
+    <a href="<?= \App\Core\View::url('/locations') ?>">Locations</a>
+    <a href="<?= \App\Core\View::url('/about') ?>">About Us</a>
+    <a href="<?= \App\Core\View::url('/contact') ?>" style="color:#fff">Contact</a>
+  </nav>
+  <div class="actions">
+    <?php $user = \App\Core\Session::get('user'); ?>
+    <?php if ($user): ?>
+        <?php $dashUrl = ($user['role_name'] === 'customer') ? '/customer' : '/admin'; ?>
+        <a href="<?= \App\Core\View::url($dashUrl) ?>" class="btn btn-gold">Dashboard</a>
+    <?php else: ?>
+        <a href="<?= \App\Core\View::url('/login') ?>" class="btn btn-gold">Login</a>
+        <a href="<?= \App\Core\View::url('/register') ?>" class="btn btn-dark">Register</a>
+    <?php endif; ?>
+    <button class="menu">☰</button>
+  </div>
+ </div>
+</header>
+
+<section class="hero">
+ <div class="container">
+  <div class="eyebrow">RC Courier Support</div>
+  <h1>Let's move things<br><span>forward together.</span></h1>
+  <p>Whether you need a shipment quote, delivery support, corporate logistics solution or help with an existing booking, our team is ready to help.</p>
+  <div class="hero-pills">
+   <div class="hero-pill"><strong>UAE</strong> Local Support</div>
+   <div class="hero-pill"><strong>GCC</strong> Cross-Border</div>
+   <div class="hero-pill"><strong>24/7</strong> Digital Tracking</div>
+   <div class="hero-pill"><strong>AED</strong> Transparent Pricing</div>
+  </div>
+ </div>
+</section>
+
+<main class="contact">
+ <div class="container contact-grid">
+  <aside class="info">
+   <h2>Talk to RC Courier</h2>
+   <p class="sub">Choose the channel that works best for you.</p>
+   <div class="info-list">
+    <div class="info-item"><div class="icon">TEL</div><div><h3>Call our team</h3><a href="tel:+97148002684">+971 4 800 2684</a><p>UAE customer support</p></div></div>
+    <div class="info-item"><div class="icon">WA</div><div><h3>WhatsApp</h3><a href="https://wa.me/971501234567" target="_blank">+971 50 123 4567</a><p>Quick shipment assistance</p></div></div>
+    <div class="info-item"><div class="icon">@</div><div><h3>Email support</h3><a href="mailto:support@rccourier.ae">support@rccourier.ae</a><p>General enquiries & support</p></div></div>
+    <div class="info-item"><div class="icon">HQ</div><div><h3>UAE headquarters</h3><p>Dubai, United Arab Emirates</p><p>Service across all Emirates</p></div></div>
+   </div>
+   <div class="hours"><strong>Support hours</strong><br>Monday – Saturday · 8:00 AM – 8:00 PM UAE time<br>Digital tracking remains available online.</div>
+   <div class="online">ONLINE SUPPORT AVAILABLE</div>
+  </aside>
+
+  <section class="form">
+   <div class="form-head">
+    <div><h2>Send us a message</h2><p class="sub">Tell us what you need and our team will route your request.</p></div>
+    <div class="secure">&check; SECURE FORM</div>
+   </div>
+
+   <?php if ($msg = \App\Core\Session::getFlash('success')): ?>
+       <div class="alert alert-success"><?= e($msg) ?></div>
+   <?php endif; ?>
+   <?php if ($msg = \App\Core\Session::getFlash('error')): ?>
+       <div class="alert alert-error"><?= e($msg) ?></div>
+   <?php endif; ?>
+
+   <form id="contactForm" action="<?= \App\Core\View::url('/contact') ?>" method="POST">
+    <input type="hidden" name="_token" value="<?= \App\Core\Session::getCsrfToken() ?>">
+    <div class="grid">
+     <div class="field"><label for="name">Full name</label><input id="name" name="name" placeholder="Your full name" required></div>
+     <div class="field"><label for="company">Company (optional)</label><input id="company" name="company" placeholder="Company name"></div>
+     <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@company.com" required></div>
+     <div class="field"><label for="phone">Mobile number</label><input id="phone" name="phone" type="tel" placeholder="+971 5X XXX XXXX" required></div>
+     <div class="field full"><label>How can we help?</label>
+      <div class="topic-grid">
+       <div class="topic"><input type="radio" id="q1" name="topic" value="Shipment Support" checked><label for="q1">Shipment Support</label></div>
+       <div class="topic"><input type="radio" id="q2" name="topic" value="Get a Quote"><label for="q2">Get a Quote</label></div>
+       <div class="topic"><input type="radio" id="q3" name="topic" value="Corporate"><label for="q3">Corporate</label></div>
+       <div class="topic"><input type="radio" id="q4" name="topic" value="General"><label for="q4">General</label></div>
+      </div>
+     </div>
+     <div class="field full"><label for="reference">Shipment / booking reference (optional)</label><input id="reference" name="reference" placeholder="e.g. RC-2026-000123"></div>
+     <div class="field full"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us how we can help..." required></textarea></div>
+    </div>
+    <div class="check"><input id="consent" type="checkbox" required><label for="consent">I agree that RC Courier may use the information provided to respond to my enquiry and provide relevant service support.</label></div>
+    <div class="form-actions"><p>For urgent shipment issues, include your shipment reference so our support team can locate the booking faster.</p><button class="btn btn-gold submit" type="submit">Send Message →</button></div>
+   </form>
+  </section>
+ </div>
+</main>
+
+<section class="quick">
+ <div class="container">
+  <div class="title"><div class="eyebrow">Need something faster?</div><h2>Go directly to what you need.</h2><p>Skip the enquiry form when you already know the next step.</p></div>
+  <div class="quick-grid">
+   <article class="quick-card"><div class="qicon">TRK</div><h3>Track a shipment</h3><p>Check the latest status and delivery milestones for an existing shipment.</p><a href="<?= \App\Core\View::url('/track') ?>">Track Shipment →</a></article>
+   <article class="quick-card"><div class="qicon">AED</div><h3>Request a quote</h3><p>Get an estimated AED shipping price based on route and package details.</p><a href="<?= \App\Core\View::url('/quote') ?>">Get a Quote →</a></article>
+   <article class="quick-card"><div class="qicon">BOX</div><h3>Book a shipment</h3><p>Schedule a pickup across the UAE or arrange GCC and international shipping.</p><a href="<?= \App\Core\View::url('/book') ?>">Book Shipment →</a></article>
+  </div>
+ </div>
+</section>
+
+<section class="map-section">
+ <div class="container map-wrap">
+  <div class="map">
+   <div class="map-box"><strong>RC COURIER NETWORK</strong>UAE service coverage</div>
+   <div class="m-route"></div><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div><div class="pin p4"></div>
+   <span class="map-label l1">Dubai</span><span class="map-label l2">Abu Dhabi</span><span class="map-label l3">RAK</span><span class="map-label l4">Fujairah</span>
+  </div>
+  <div class="map-info">
+   <div class="eyebrow">Where we operate</div>
+   <h2>UAE based. Gulf connected.</h2>
+   <p>RC Courier is designed around UAE-wide delivery with GCC road freight and international logistics options.</p>
+   <div class="coverage-list">
+    <div class="coverage"><span>Dubai</span><span>Full service</span></div>
+    <div class="coverage"><span>Abu Dhabi</span><span>Full service</span></div>
+    <div class="coverage"><span>Sharjah & Ajman</span><span>Full service</span></div>
+    <div class="coverage"><span>RAK, Fujairah & UAQ</span><span>Coverage</span></div>
+    <div class="coverage"><span>GCC</span><span>Road freight</span></div>
+    <div class="coverage"><span>Worldwide</span><span>International air</span></div>
+   </div>
+   <a class="btn btn-dark" href="<?= \App\Core\View::url('/locations') ?>">View All Locations →</a>
+  </div>
+ </div>
+</section>
+
+<section class="cta">
+ <div class="container">
+  <h2>Have a shipment to move?</h2>
+  <p>Get a price, schedule a pickup or start tracking in just a few clicks.</p>
+  <a class="btn btn-gold" href="<?= \App\Core\View::url('/quote') ?>">Get a Quote</a>
+  <a class="btn btn-dark" href="<?= \App\Core\View::url('/book') ?>">Book Shipment</a>
+ </div>
+</section>
+
+<footer>
+ <div class="container">
+  <div class="footer-grid">
+   <div>
+    <a class="brand" href="<?= \App\Core\View::url('/') ?>">
+      <div class="logo" style="padding:0; border:none; background:transparent;"><img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:36px; width:36px; border-radius:8px; object-fit:cover;"></div>
+      <div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div>
+    </a>
+    <p style="max-width:300px;margin-top:14px">Premium courier, express delivery and logistics solutions across the UAE, GCC and international destinations.</p>
+   </div>
+   <div>
+    <h4>Services</h4>
+    <a href="<?= \App\Core\View::url('/services') ?>">Same-Day Delivery</a>
+    <a href="<?= \App\Core\View::url('/services') ?>">Next-Day Delivery</a>
+    <a href="<?= \App\Core\View::url('/services') ?>">GCC Road Freight</a>
+    <a href="<?= \App\Core\View::url('/services') ?>">International Air</a>
+    <a href="<?= \App\Core\View::url('/services') ?>">E-Commerce Logistics</a>
+   </div>
+   <div>
+    <h4>Company</h4>
+    <a href="<?= \App\Core\View::url('/about') ?>">About RC Courier</a>
+    <a href="<?= \App\Core\View::url('/locations') ?>">Our Hubs & Coverage</a>
+    <a href="<?= \App\Core\View::url('/contact') ?>">Contact Us</a>
+    <a href="<?= \App\Core\View::url('/contact') ?>">Corporate Solutions</a>
+   </div>
+   <div>
+    <h4>Quick Links</h4>
+    <a href="<?= \App\Core\View::url('/track') ?>">Track Shipment</a>
+    <a href="<?= \App\Core\View::url('/quote') ?>">Get a Quote</a>
+    <a href="<?= \App\Core\View::url('/book') ?>">Book Shipment</a>
+    <p style="margin-top:10px;">Dubai, United Arab Emirates</p>
+    <p>Phone: +971 4 800 2684</p>
+    <p>support@rccourier.ae</p>
+   </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <?= date('Y') ?> RC Courier UAE. All rights reserved. TRN: 100987654321003.</span>
+    <span>UAE • GCC • Worldwide</span>
+  </div>
+ </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),3500)}
+</script>
+</body>
+</html>

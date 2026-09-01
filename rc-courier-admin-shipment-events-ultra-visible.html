@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RC Courier — Shipment Events</title><style>
+:root{--nav:#071020;--bg:#f3f6f9;--panel:#101d2d;--ink:#0b1728;--muted:#75869c;--line:#24354b;--gold:#e5b44f;--gold2:#f7d37a;--cyan:#27b8ff;--green:#22c58b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:13px Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}.sidebar{position:fixed;left:0;top:0;bottom:0;width:238px;background:radial-gradient(circle at 15% 0%,rgba(7,143,209,.08),transparent 32%),linear-gradient(180deg,#081121,#0d1729);color:#9db0c8;padding:22px 12px;z-index:20;border-right:1px solid #e0e7ef;box-shadow:4px 0 25px rgba(25,45,70,.04)}.brand{display:flex;align-items:center;gap:9px;padding:0 8px 27px}.brandmark{width:35px;height:35px;border:1px solid #a87922;border-radius:10px;display:grid;place-items:center;color:#f4c65e;font-weight:900;background:#101b2b}.brandtext{font-size:21.6px;font-weight:900;color:#122238}.brandtext b{color:#e63c45}.brandtext small{display:block;color:#b07b13;font-size:6px;letter-spacing:.16em;margin-top:2px}.group{margin:8px 0 5px;padding:10px 9px 4px;color:#8b9aae;font-size:8px;letter-spacing:.16em;text-transform:uppercase}.nav a{display:flex;align-items:center;gap:10px;color:#9db0c8;text-decoration:none;padding:11px 10px;border-radius:9px;margin:3px 0;font-size:13.2px;font-weight:650}.nav a:hover,.nav a.active{background:linear-gradient(90deg,rgba(217,157,36,.12),rgba(217,157,36,.025));color:#a56f0d;border-left:2px solid var(--gold)}.nav i{font-style:normal;width:18px;text-align:center;color:#8a9aae}.sideBottom{position:absolute;left:12px;right:12px;bottom:18px;border-top:1px solid #e0e7ef;padding-top:14px}.admin{display:flex;align-items:center;gap:9px;margin-bottom:12px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#182a40;border:1px solid #30435c;color:#f2c55f;font-size:9px;font-weight:900}.admin b{font-size:9px;color:#122238}.admin small{display:block;color:#637892;font-size:8px;margin-top:2px}.signout{width:100%;padding:10px;border:1px solid #d5dee8;background:#ffffff;color:#31445b;border-radius:9px;font-size:9px;font-weight:700}.main{margin-left:238px;min-height:100vh}.topbar{height:68px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid #e0e7ee;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10}.topbar h2{font-size:16.8px;margin:0}.signed{color:#708198;font-size:9px}.signed b{color:#14243a}.content{padding:27px 28px 45px;max-width:1500px;margin:auto}.pageHead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:21px}.eyebrow{font-size:8px;color:#71839a;text-transform:uppercase;letter-spacing:.15em;font-weight:800;margin-bottom:6px}.pageHead h1{font-size:25px;line-height:1.1;margin:0 0 6px;letter-spacing:-.02em}.sub{margin:0;color:#6d7f96;font-size:10px}.headActions{display:flex;gap:8px}.btn{border:1px solid #dfe6ee;background:#ffffff;color:#26374d;border-radius:9px;padding:10px 13px;font-size:9px;font-weight:800}.btn.primary{border-color:#d9a638;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111d2d;box-shadow:0 8px 22px rgba(206,155,48,.18)}.hero{background:linear-gradient(135deg,#0d1a2b,#152438 58%,#0e1b2c);color:#122238;border:1px solid #20324a;border-radius:18px;padding:20px;margin-bottom:15px;position:relative;overflow:hidden;box-shadow:0 18px 45px rgba(24,48,75,.10)}.hero:after{content:"";position:absolute;width:330px;height:330px;border:1px solid rgba(7,143,209,.08);border-radius:50%;right:-150px;top:-190px;box-shadow:0 0 0 55px rgba(7,143,209,.025),0 0 0 110px rgba(7,143,209,.018)}.heroTop{display:flex;justify-content:space-between;gap:20px;align-items:center;position:relative;z-index:1}.shipId{font-size:19px;font-weight:850}.shipId span{color:#91a4bb;font-size:10px;font-weight:500;display:block;margin-top:5px}.live{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(39,184,255,.28);background:rgba(7,143,209,.08);color:#71d2ff;padding:7px 10px;border-radius:20px;font-size:8px;font-weight:800}.dot{width:6px;height:6px;background:#31d79b;border-radius:50%;box-shadow:0 0 10px #31bd88}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}.panel{background:linear-gradient(145deg,#ffffff,#f8fbfd);color:#122238;border:1px solid #dce5ed;border-radius:17px;padding:19px;box-shadow:0 15px 38px rgba(24,48,75,.09);position:relative;overflow:hidden}.panel:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}.panel h3{margin:0 0 4px;font-size:14.4px}.desc{margin:0 0 16px;color:#708198;font-size:9px;line-height:1.5}.field{margin:11px 0}.field label{display:block;color:#33465d;font-size:8px;font-weight:800;margin-bottom:6px}.input,.select{width:100%;height:38px;border:1px solid #dce4ec;border-radius:10px;background:#ffffff;color:#1b2b40;padding:0 11px;font-size:10px;outline:0}.input:focus,.select:focus{border-color:#51b9ef;box-shadow:0 0 0 3px rgba(39,184,255,.11)}.fullBtn{width:100%;height:38px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--gold2),var(--gold));font-weight:900;color:#101d2c;font-size:9px;margin-top:7px}.auto{margin-top:9px;background:#eef3f7;color:#1a2d43;border-radius:10px;height:35px;border:0;width:100%;font-size:8px;font-weight:850}.timeline{margin-top:15px}.timelineHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.timelineHead h3{margin:0;font-size:14.4px}.timelineHead span{color:#708198;font-size:8px}.events{position:relative;padding:5px 2px 3px 27px}.events:before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:1px;background:linear-gradient(#d9a02c,#159bd4,#16ae76)}.event{position:relative;margin:0 0 14px;padding:12px 13px;background:#f9fbfd;border:1px solid #dce5ed;border-radius:11px;display:flex;justify-content:space-between;gap:15px}.event:before{content:"";position:absolute;left:-23px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:3px solid #ffffff}.event.current:before{background:var(--cyan);box-shadow:0 0 14px rgba(7,143,209,.35)}.event.done:before{background:var(--green)}.event b{font-size:9px}.event p{margin:4px 0 0;color:#6f8299;font-size:8px}.event time{color:#65cfff;font-size:8px;font-weight:800;white-space:nowrap}.details{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.infoList{display:grid;grid-template-columns:1fr 1fr;gap:9px}.info{background:#f9fbfd;border:1px solid #dce5ed;border-radius:10px;padding:10px}.info small{display:block;color:#687c95;font-size:7px;margin-bottom:4px}.info b{font-size:9px}.price{display:grid;gap:8px}.priceRow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #22344a;color:#8497ad;font-size:9px}.priceRow strong{color:#122238}.total{display:flex;justify-content:space-between;margin-top:3px;font-size:14.4px}.total b{color:#f5cb67}.notice{margin-top:15px;padding:12px 14px;border:1px solid rgba(39,184,255,.18);background:rgba(39,184,255,.05);border-radius:11px;color:#91a6bd;font-size:8px}.toast{position:fixed;right:25px;bottom:25px;background:#ffffff;color:#122238;border:1px solid #d9e3ec;border-radius:11px;padding:12px 15px;box-shadow:0 18px 40px rgba(25,45,70,.14);opacity:0;transform:translateY(10px);transition:.25s;font-size:9px;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:1050px){.grid{grid-template-columns:1fr}.details{grid-template-columns:1fr}.sidebar{width:205px}.main{margin-left:205px}}@media(max-width:760px){.sidebar{display:none}.main{margin:0}.topbar{padding:0 15px}.content{padding:20px 14px}.pageHead{align-items:flex-start;flex-direction:column;gap:13px}.heroTop{align-items:flex-start;flex-direction:column}.infoList{grid-template-columns:1fr}.signed{display:none}}
+
+/* High-visibility shipment tracking header */
+.shipment-hero{
+  background:linear-gradient(135deg,#ffffff 0%,#f7fbff 55%,#fff8e8 100%) !important;
+  border:1px solid #d5e0ea !important;
+  border-left:5px solid #d9a12a !important;
+  box-shadow:0 14px 35px rgba(22,48,75,.10) !important;
+}
+.shipment-hero .tracking-number,
+.shipment-hero .tracking-label{
+  color:#17304b !important;
+}
+.tracking-bar{
+  background:#ffffff !important;
+  border:2px solid #c9d8e5 !important;
+  color:#122238 !important;
+  box-shadow:0 8px 24px rgba(18,48,75,.08) !important;
+}
+.tracking-bar *{
+  color:#17304b !important;
+}
+.tracking-bar .tracking-accent{
+  color:#087fb8 !important;
+  font-weight:800 !important;
+}
+
+
+/* FINAL VISIBILITY PASS — RC Courier */
+.hero{
+  background:linear-gradient(135deg,#ffffff 0%,#f8fbff 52%,#fff7df 100%) !important;
+  color:#10233a !important;
+  border:1px solid #cfdce8 !important;
+  border-left:6px solid #d9a12a !important;
+  border-radius:18px !important;
+  padding:24px !important;
+  box-shadow:0 16px 38px rgba(24,48,75,.12) !important;
+}
+.heroTop{z-index:2 !important}
+.shipId{
+  color:#10233a !important;
+  font-size:26px !important;
+  font-weight:900 !important;
+  letter-spacing:-.01em !important;
+}
+.shipId span{
+  color:#52677e !important;
+  font-size:14px !important;
+  font-weight:650 !important;
+  margin-top:7px !important;
+}
+.live{
+  border:2px solid #159bd4 !important;
+  background:#e8f7fd !important;
+  color:#066f9f !important;
+  padding:10px 15px !important;
+  border-radius:24px !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  letter-spacing:.02em !important;
+}
+.live .dot{
+  width:9px !important;
+  height:9px !important;
+  background:#12a86f !important;
+  box-shadow:0 0 0 4px rgba(18,168,111,.13),0 0 12px rgba(18,168,111,.4) !important;
+}
+.pageHead h1{font-size:30px !important}
+.sub{
+  font-size:14px !important;
+  color:#4e637a !important;
+}
+.sub b{
+  color:#087fb8 !important;
+  font-size:16px !important;
+  font-weight:900 !important;
+  background:#e8f7fd !important;
+  border:1px solid #b8dfef !important;
+  border-radius:7px !important;
+  padding:3px 7px !important;
+}
+.panel h3,.timelineHead h3{font-size:17px !important}
+.desc{font-size:11px !important}
+.field label{font-size:10px !important}
+.input,.select{font-size:12px !important;height:44px !important}
+.fullBtn{font-size:11px !important;height:44px !important}
+.auto{font-size:10px !important;height:40px !important}
+.event b{font-size:11px !important}
+.event p,.event time{font-size:10px !important}
+.info b{font-size:11px !important}
+.info small{font-size:9px !important}
+.priceRow{font-size:11px !important}
+.notice{font-size:10px !important}
+
+
+.sidebar{
+  background:linear-gradient(180deg,#ffffff 0%,#f5f8fb 100%) !important;
+  color:#52677e !important;
+}
+.nav a{color:#425870 !important;font-size:15px !important}
+.nav a:hover,.nav a.active{
+  background:#fff8e8 !important;
+  color:#9a690c !important;
+  border-left:3px solid #d9a12a !important;
+}
+.group{color:#8798aa !important;font-size:10px !important}
+.brandtext{font-size:21px !important}
+.admin b{font-size:11px !important}
+.admin small{font-size:10px !important}
+
+</style></head><body><aside class="sidebar"><div class="brand"><div class="brandmark">RC</div><div class="brandtext"><b>RC</b> COURIER<small>UAE • GCC LOGISTICS</small></div></div><div class="group">Operations</div><nav class="nav"><a href="#"><i>▦</i>Dashboard</a><a href="#"><i>▣</i>Shipments</a><a class="active" href="#"><i>⌁</i>Tracking Dispatcher</a><a href="#"><i>◉</i>Customers (CRM)</a><a href="#"><i>◇</i>Quotations</a></nav><div class="group">Finance</div><nav class="nav"><a href="#"><i>▤</i>Invoices & Accounting</a><a href="#"><i>◒</i>Reports & Analytics</a></nav><div class="group">System</div><nav class="nav"><a href="#"><i>◌</i>Audit Logs</a><a href="#"><i>⚙</i>System Settings</a></nav><div class="sideBottom"><div class="admin"><div class="avatar">SA</div><div><b>Sara Al-Maktoum</b><small>System Administrator</small></div></div><button class="signout">Sign Out</button></div></aside><main class="main"><header class="topbar"><h2>Shipment Control Center — Admin</h2><div class="signed">Signed in as <b>Sara Al-Maktoum (System Admin)</b> (ADMIN)</div></header><section class="content"><div class="pageHead"><div><div class="eyebrow">Shipment intelligence / event control</div><h1>Shipment SHP-2026-000031</h1><p class="sub">Tracking Number: <b>AE-FFD52-2026</b> · Live operational event management</p></div><div class="headActions"><button class="btn" onclick="toast('Shipment editor opened')">Edit Shipment</button><button class="btn primary" onclick="toast('Label generation queued')">Generate Label</button></div></div><div class="hero"><div class="heroTop"><div class="shipId">AE-FFD52-2026<span>SHP-2026-000031 · Same-Day Express UAE</span></div><div class="live"><span class="dot"></span> LIVE TRACKING</div></div></div><div class="grid"><section class="panel"><h3>Update Shipment Status</h3><p class="desc">Publish a verified status event to the customer's tracking timeline.</p><div class="field"><label>NEW STATUS</label><select id="status" class="select"><option>BOOKED</option><option>PICKED UP</option><option>AT ORIGIN HUB</option><option>IN TRANSIT</option><option>OUT FOR DELIVERY</option><option>DELIVERED</option><option>EXCEPTION</option></select></div><div class="field"><label>EVENT DATE & TIME</label><input id="eventDate" class="input" type="datetime-local"></div><button class="fullBtn" onclick="publishEvent()">Publish Status Event</button></section><section class="panel"><h3>⚡ Auto-Generate Events</h3><p class="desc">Create a realistic chronological operational timeline between the selected dates.</p><div class="field"><label>START DATE & TIME</label><input id="startDate" class="input" type="datetime-local"></div><div class="field"><label>END DATE & TIME</label><input id="endDate" class="input" type="datetime-local"></div><div class="field"><label>NUMBER OF EVENTS</label><select id="eventCount" class="select"><option value="5">5 Events · Booked → Picked Up → At Origin Hub → In Transit → Delivered</option><option value="4">4 Events · Booked → Picked Up → In Transit → Delivered</option></select></div><button class="auto" onclick="generateTimeline()">⚡ Auto-Generate Chronological Timeline</button></section></div><section class="panel timeline"><div class="timelineHead"><h3>Full Audit Tracking Timeline</h3><span id="eventCountLabel">1 published event</span></div><div id="events" class="events"><article class="event current"><div><b>BOOKED — Dubai Hub</b><p>Shipment successfully booked and accepted into the RC Courier network.</p></div><time>Aug 26, 2026 · 18:10</time></article></div></section><div class="details"><section class="panel"><h3>Customer Details</h3><p class="desc">Verified customer and billing contact information.</p><div class="infoList"><div class="info"><small>NAME</small><b>Omar Al-Zaabi</b></div><div class="info"><small>COMPANY</small><b>Dubai Trading & Logistics FZE</b></div><div class="info"><small>EMAIL</small><b>demo.customer@example.ae</b></div><div class="info"><small>PHONE</small><b>+971 55 987 6543</b></div></div></section><section class="panel"><h3>Pricing Breakdown</h3><p class="desc">Shipment charges calculated in UAE Dirhams.</p><div class="price"><div class="priceRow"><span>Subtotal</span><strong>64.00 AED</strong></div><div class="priceRow"><span>VAT (5%)</span><strong>3.20 AED</strong></div><div class="total"><b>Total</b><b>67.20 AED</b></div></div></section></div><div class="notice">🔒 <b>Audit-ready workflow:</b> Store each status publication server-side with administrator ID, timestamp, previous status, new status and source IP when connected to PHP/MySQL.</div></section></main><div id="toast" class="toast"></div><script>
+const t=document.getElementById('toast');function toast(m){t.textContent=m;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),2400)}function pad(n){return String(n).padStart(2,'0')}function local(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}const now=new Date(),y=new Date(now-86400000);eventDate.value=local(now);startDate.value=local(y);endDate.value=local(now);
+function publishEvent(){let s=status.value,d=new Date(eventDate.value),x=document.createElement('article');x.className='event current';x.innerHTML='<div><b>'+s+' — RC Courier Operations</b><p>Manual status event published by System Administrator.</p></div><time>'+d.toLocaleString('en-US',{month:'short',day:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</time>';events.prepend(x);eventCountLabel.textContent=document.querySelectorAll('.event').length+' published events';toast(s+' event published successfully')}
+function generateTimeline(){let a=new Date(startDate.value),b=new Date(endDate.value);if(isNaN(a)||isNaN(b)||b<=a){toast('Please select a valid date range');return}let n=eventCount.value==='5'?['BOOKED','PICKED UP','AT ORIGIN HUB','IN TRANSIT','DELIVERED']:['BOOKED','PICKED UP','IN TRANSIT','DELIVERED'];events.innerHTML='';n.forEach((s,i)=>{let d=new Date(a.getTime()+(b-a)*i/(n.length-1)),x=document.createElement('article');x.className='event '+(i===n.length-1?'done':'');x.innerHTML='<div><b>'+s+' — '+(i<2?'Dubai Hub':'RC Courier Network')+'</b><p>Auto-generated chronological operational event.</p></div><time>'+d.toLocaleString('en-US',{month:'short',day:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</time>';events.appendChild(x)});eventCountLabel.textContent=n.length+' generated events';toast(n.length+' chronological events generated')}
+</script></body></html>

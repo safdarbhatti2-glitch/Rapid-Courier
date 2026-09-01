@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RC Courier Admin — Shipments</title>
+<style>
+:root{--nav:#091225;--bg:#f4f7fa;--ink:#102039;--muted:#708096;--line:#e3e9f0;--gold:#e0ad48;--gold2:#f6d27a;--blue:#168fd2}
+*{box-sizing:border-box}body{margin:0;font:13px Inter,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.app{min-height:100vh}.side{position:fixed;inset:0 auto 0 0;width:245px;background:linear-gradient(180deg,#081021,#0d172b);color:#9fb0c7;padding:22px 14px;z-index:5}
+.logo{padding:0 8px 28px;font-weight:800;font-size:16px;color:#fff}.logo b{color:#ef3737}.mini{display:inline-grid;place-items:center;width:34px;height:34px;border:1px solid #b78b35;border-radius:10px;color:#f5cf77;margin-right:8px;font-size:11px}
+.label{font-size:8px;text-transform:uppercase;letter-spacing:.15em;color:#50627b;padding:13px 9px 7px}.nav a{display:block;padding:11px 10px;margin:3px 0;border-radius:9px;color:#9fb0c7;text-decoration:none;font-size:11px;font-weight:600}.nav a:hover,.nav .active{background:rgba(224,173,72,.12);color:#f5cf77}.bottom{position:absolute;bottom:20px;left:14px;right:14px;border-top:1px solid #233047;padding-top:15px}.user{display:flex;gap:9px;align-items:center;margin-bottom:12px}.avatar{width:32px;height:32px;border-radius:50%;background:#18263d;color:#f5cf77;display:grid;place-items:center;font-weight:800;font-size:9px}.user small{display:block;color:#63758d}.logout{width:100%;padding:10px;border:1px solid #34435a;border-radius:9px;background:transparent;color:#fff}
+.main{margin-left:245px}.top{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:4}.top h2{font-size:15px;margin:0}.top span{font-size:10px;color:var(--muted)}.content{padding:29px;max-width:1550px}.heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}.heading h1{font-size:26px;margin:0 0 4px}.heading p{margin:0;color:var(--muted);font-size:10px}.btn{border:0;border-radius:9px;background:linear-gradient(135deg,var(--gold2),var(--gold));padding:11px 16px;font-weight:800;font-size:10px;cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:15px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px}.metric small{color:#8492a4;font-size:8px}.metric strong{display:block;font-size:21px;margin:7px 0 2px}.trend{font-size:8px;color:#159367}
+.toolbar{background:linear-gradient(135deg,#101c2b,#172638);padding:14px;border-radius:16px;margin-bottom:12px}.filters{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr auto;gap:8px}.input,.select{height:38px;border:0;border-radius:9px;padding:0 12px;font-size:10px;background:#fff;color:#25364c;outline:0;width:100%}.filter{border:0;border-radius:9px;padding:0 18px;background:linear-gradient(135deg,var(--gold2),var(--gold));font-weight:800}.advanced{display:flex;justify-content:space-between;color:#8796aa;font-size:8px;margin-top:9px}.advanced b{color:#e1bd68}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 50px rgba(16,31,51,.08)}.cardhead{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.cardhead strong{font-size:11px}.cardhead span{font-size:8px;color:var(--muted)}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:1000px}th{padding:12px;text-align:left;background:#f8fafc;color:#74849a;font-size:8px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line)}td{padding:12px;border-bottom:1px solid #edf1f5;font-size:9px;white-space:nowrap}tr:hover td{background:#fbfcfd}.ref{font-weight:800}.track{font-family:monospace;color:#62748a;font-size:8px}.status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:7px;font-weight:800}.booked{color:#1383bf;background:#eaf6fd;border:1px solid #cceafa}.transit{color:#a17008;background:#fff6dc;border:1px solid #f2dfaa}.action{border:1px solid #e0e6ed;background:#fff;border-radius:7px;padding:6px 8px;font-size:8px;font-weight:700}.labelbtn{border:0;background:transparent;color:#a97917}.pagination{padding:14px 17px;display:flex;justify-content:space-between;color:#7a899b;font-size:8px}.pages button{border:1px solid var(--line);background:#fff;border-radius:7px;min-width:27px;height:27px}.pages .active{background:#101c2d;color:#fff}
+@media(max-width:1100px){.metrics{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1.5fr 1fr 1fr auto}.filters select:nth-child(4){display:none}}
+@media(max-width:800px){.side{display:none}.main{margin:0}.top{padding:0 15px}.content{padding:20px 15px}.metrics{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}}
+@media(max-width:520px){.metrics{grid-template-columns:1fr}.heading{align-items:start;gap:15px;flex-direction:column}.filters{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="side">
+<div class="logo"><span class="mini">RC</span><b>RC</b> COURIER<br><small style="margin-left:44px;color:#657790">ADMIN CONTROL CENTER</small></div>
+<div class="label">Operations</div><nav class="nav">
+<a href="#">▦ &nbsp; Dashboard</a><a class="active" href="#">▣ &nbsp; Shipments</a><a href="#">⌁ &nbsp; Tracking Dispatcher</a><a href="#">◉ &nbsp; Customers (CRM)</a><a href="#">◇ &nbsp; Quotations</a></nav>
+<div class="label">Finance & Insights</div><nav class="nav"><a href="#">▤ &nbsp; Invoices & Accounting</a><a href="#">◒ &nbsp; Reports & Analytics</a></nav>
+<div class="label">System</div><nav class="nav"><a href="#">◌ &nbsp; Audit Logs</a><a href="#">⚙ &nbsp; System Settings</a></nav>
+<div class="bottom"><div class="user"><div class="avatar">SA</div><div><b style="font-size:9px;color:#fff">Sara Al-Maktoum</b><small>System Administrator</small></div></div><button class="logout">Sign Out</button></div>
+</aside>
+<main class="main">
+<header class="top"><h2>Shipments Operations — Admin Portal</h2><span>Signed in as <b>Sara Al-Maktoum</b> (ADMIN)</span></header>
+<section class="content">
+<div class="heading"><div><h1>Shipment Operations</h1><p>Monitor, filter and manage every shipment moving through the RC Courier network.</p></div><button class="btn">＋ Create Shipment</button></div>
+<div class="metrics">
+<div class="metric">Total Shipments<strong>1,248 <i class="trend">+8.4%</i></strong><small>vs. previous 30 days</small></div>
+<div class="metric">Booked<strong>684</strong><small>Active bookings</small></div>
+<div class="metric">In Transit<strong>317</strong><small>Currently moving</small></div>
+<div class="metric">Delivered<strong>221 <i class="trend">+12.1%</i></strong><small>Successful deliveries</small></div>
+<div class="metric">Revenue<strong>84.6K AED</strong><small>Current period</small></div>
+</div>
+<div class="toolbar"><div class="filters">
+<input id="search" class="input search" placeholder="Search reference, tracking #, customer...">
+<select id="status" class="select"><option value="">All Statuses</option><option value="BOOKED">Booked</option><option value="IN TRANSIT">In Transit</option><option value="DELIVERED">Delivered</option></select>
+<select class="select"><option>All Services</option><option>Same-Day Express UAE</option><option>Next-Day Delivery</option><option>GCC Overland</option></select>
+<select class="select"><option>All Dates</option><option>Today</option><option>Last 7 Days</option><option>Last 30 Days</option></select>
+<button class="filter" onclick="filterRows()">Filter</button></div><div class="advanced">＋ Advanced Filters <b>Table View</b></div></div>
+<div class="card"><div class="cardhead"><strong>All Shipments</strong><span id="count">Showing 15 of 1,248 shipments</span></div>
+<div class="scroll"><table><thead><tr><th>Reference</th><th>Tracking Number</th><th>Customer</th><th>Service</th><th>Status</th><th>Total (AED)</th><th>Date</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="pagination"><span>Rows per page: <b>15</b></span><div class="pages"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>›</button></div><span>1–15 of 1,248</span></div></div>
+</section></main>
+<script>
+const data=[
+['000016','BD4E6','BOOKED','67.20'],['000015','069ED','BOOKED','67.20'],['000014','A15A4','BOOKED','67.20'],['000013','5D65A','BOOKED','67.20'],['000012','A3096','BOOKED','67.20'],['000011','8EC85','BOOKED','67.20'],['000010','EE717','BOOKED','67.20'],['000009','0B439','BOOKED','67.20'],['000008','184A9','BOOKED','67.20'],['000007','FA0B4','BOOKED','67.20'],['000006','6D5B2','BOOKED','67.20'],['000005','EF7B6','BOOKED','67.20'],['000004','C56C3','BOOKED','67.20'],['000003','2170A','BOOKED','67.20'],['000002','9CEE5','BOOKED','67.20'],['000001','98412','IN TRANSIT','63.00']];
+const rows=document.getElementById('rows');
+function render(list=data){rows.innerHTML=list.map(x=>`<tr><td class="ref">SHP-2026-${x[0]}</td><td class="track">AE-${x[1]}-2026</td><td>Dubai Trading & Logistics FZE</td><td>Same-Day Express UAE</td><td><span class="status ${x[2]=='BOOKED'?'booked':'transit'}">${x[2]}</span></td><td><b>${x[3]} AED</b></td><td>Aug 26, 2026</td><td><button class="action" onclick="alert('Connect Manage to your PHP/MySQL shipment detail route.')">Manage</button> <button class="action labelbtn">Label</button></td></tr>`).join('');}
+function filterRows(){let q=document.getElementById('search').value.toLowerCase(),s=document.getElementById('status').value.toLowerCase();let f=data.filter(x=>x.join(' ').toLowerCase().includes(q)&&(!s||x[2].toLowerCase()==s));render(f);document.getElementById('count').textContent=`Showing ${f.length} of 1,248 shipments`;}
+document.getElementById('search').addEventListener('input',filterRows);render();
+</script>
+</body></html>

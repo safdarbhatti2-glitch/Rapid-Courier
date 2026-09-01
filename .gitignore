@@ -1,0 +1,13 @@
+# Temporary and system files
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment configuration
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.swp

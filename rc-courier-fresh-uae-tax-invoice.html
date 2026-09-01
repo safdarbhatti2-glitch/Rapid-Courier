@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RC Courier — UAE Tax Invoice</title>
+
+<!--
+  RC COURIER — FRESH TAX INVOICE TEMPLATE
+  ---------------------------------------
+  Original layout created from scratch. The reference invoice was used only
+  to understand the required business fields, not to reproduce its layout.
+
+  UAE VAT implementation notes:
+  - Standard VAT rate configured at 5%.
+  - Full tax invoice fields are provided for supplier, customer, invoice,
+    supply, service, VAT and AED totals.
+  - Replace the sample data with verified company/customer data.
+  - Reverse-charge wording is conditional and should only be enabled where applicable.
+  - QR code is for RC Courier's own online verification endpoint and must point
+    to a live HTTPS verification page in production.
+-->
+<style>
+:root{
+  --ink:#16324a;
+  --muted:#61778b;
+  --line:#d8e4ec;
+  --line-strong:#b9cbd8;
+  --paper:#fff;
+  --canvas:#edf3f7;
+  --soft:#f6f9fb;
+  --blue:#087fbd;
+  --blue-soft:#eaf7fd;
+  --gold:#d69b20;
+  --gold-soft:#fff8e6;
+  --green:#087f55;
+  --red:#c92e3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--canvas);
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:14px;
+  line-height:1.45;
+}
+.toolbar{
+  width:min(1080px,calc(100% - 32px));
+  margin:24px auto 14px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+.toolbar .left,.toolbar .right{display:flex;gap:8px;flex-wrap:wrap}
+button{
+  border:1px solid #c8d6e0;
+  background:#fff;
+  color:var(--ink);
+  border-radius:9px;
+  padding:10px 14px;
+  font-weight:750;
+  cursor:pointer;
+}
+button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+
+.sheet{
+  width:min(1080px,calc(100% - 32px));
+  margin:0 auto 30px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:0 18px 55px rgba(32,61,81,.10);
+  overflow:hidden;
+}
+.topline{height:6px;background:linear-gradient(90deg,var(--gold),#f1c35c,var(--blue))}
+.header{
+  padding:30px 38px 25px;
+  display:grid;
+  grid-template-columns:1.25fr .9fr;
+  gap:30px;
+  border-bottom:1px solid var(--line);
+}
+.brand-row{display:flex;align-items:center;gap:13px}
+.logo{
+  width:52px;height:52px;border:1px solid #cbd9e3;border-radius:14px;
+  display:grid;place-items:center;font-weight:900;font-size:18px;
+  color:var(--gold);background:#f8fbfd;
+}
+.brand h1{font-size:21px;margin:0;color:var(--ink);letter-spacing:-.4px}
+.brand small{display:block;color:var(--blue);font-weight:800;letter-spacing:.8px;margin-top:2px}
+.company-info{margin-top:18px;color:var(--muted);font-size:12.5px}
+.company-info strong{color:var(--ink)}
+.invoice-meta{text-align:right}
+.invoice-meta .label{
+  color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1.7px;
+  text-transform:uppercase
+}
+.invoice-meta h2{
+  margin:2px 0 14px;font-size:31px;letter-spacing:-1.1px;color:var(--ink)
+}
+.meta-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;
+  font-size:12px;text-align:left
+}
+.meta-grid span{color:var(--muted)}
+.meta-grid b{display:block;color:var(--ink);margin-top:1px}
+
+.tracking-band{
+  margin:24px 38px 0;
+  border:1px solid #b9dcec;
+  background:linear-gradient(110deg,#f3fbfe,#e9f7fc);
+  border-radius:15px;
+  padding:18px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.tracking-label{
+  font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--blue);
+  text-transform:uppercase
+}
+.tracking-id{
+  font-size:25px;font-weight:950;letter-spacing:1.1px;color:var(--ink);
+  margin-top:2px
+}
+.tracking-status{
+  padding:9px 14px;border-radius:999px;background:#fff;
+  border:1px solid #b9d7e6;color:var(--blue);font-size:11px;font-weight:900
+}
+
+.content{padding:25px 38px 32px}
+.parties{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px
+}
+.party{
+  border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff
+}
+.party .eyebrow{
+  color:var(--muted);font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase
+}
+.party h3{margin:7px 0 5px;font-size:17px}
+.party p{margin:2px 0;color:var(--muted);font-size:12.5px}
+.party p strong{color:var(--ink)}
+
+.section-title{
+  display:flex;align-items:end;justify-content:space-between;
+  margin:24px 0 10px
+}
+.section-title h3{margin:0;font-size:15px}
+.section-title span{color:var(--muted);font-size:11px}
+
+.table-wrap{border:1px solid var(--line);border-radius:13px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{
+  background:#f3f7fa;color:var(--ink);font-size:10px;
+  text-transform:uppercase;letter-spacing:.45px;text-align:left;padding:12px 11px;
+  border-bottom:1px solid var(--line)
+}
+td{padding:14px 11px;border-bottom:1px solid #e7eef3;font-size:12px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;white-space:nowrap}
+.service-name{font-weight:800;color:var(--ink)}
+.service-note{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+.lower{
+  display:grid;grid-template-columns:1fr 340px;gap:22px;margin-top:20px
+}
+.info-card{
+  border:1px solid var(--line);border-radius:14px;padding:18px;background:#fbfdfe
+}
+.info-card h4{margin:0 0 8px;font-size:12px}
+.info-card p{margin:4px 0;color:var(--muted);font-size:11.5px}
+.info-card b{color:var(--ink)}
+.payment-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid #9ed5bd;color:var(--green);background:#f1fbf6;
+  border-radius:8px;padding:7px 10px;font-size:10px;font-weight:900
+}
+.totals{
+  border:1px solid var(--line);border-radius:14px;padding:17px 18px;background:#fff
+}
+.total-line{display:flex;justify-content:space-between;gap:15px;padding:7px 0;color:var(--muted);font-size:12px}
+.total-line b{color:var(--ink)}
+.total-line.grand{
+  margin-top:5px;padding-top:14px;border-top:2px solid var(--ink);
+  font-size:17px;color:var(--ink);font-weight:900
+}
+.total-line.grand b{color:var(--gold);font-size:20px}
+.total-line.paid b{color:var(--green)}
+.total-line.due b{color:var(--red)}
+
+.verification{
+  margin-top:22px;
+  border:1px solid #c6dce9;border-radius:15px;
+  padding:18px 20px;background:#f8fcfe;
+  display:grid;grid-template-columns:116px 1fr;gap:20px;align-items:center
+}
+.qr-box{
+  width:104px;height:104px;border:1px solid #cbdbe5;background:#fff;
+  border-radius:10px;display:grid;place-items:center;padding:7px
+}
+#qrcode{width:90px;height:90px;display:grid;place-items:center}
+.verify h3{margin:0 0 5px;font-size:14px}
+.verify p{margin:3px 0;color:var(--muted);font-size:11.5px}
+.verify .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);font-size:11px}
+
+.terms{
+  margin-top:22px;border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;background:#fff
+}
+.terms h3{margin:0 0 9px;font-size:13px}
+.terms ol{margin:0;padding-left:20px;color:var(--muted);font-size:10.8px}
+.terms li{margin:5px 0}
+.terms strong{color:var(--ink)}
+
+.footer{
+  border-top:1px solid var(--line);padding:17px 38px;
+  display:flex;justify-content:space-between;gap:20px;
+  color:var(--muted);font-size:10.5px;background:#f8fafc
+}
+.footer strong{color:var(--ink)}
+
+@media(max-width:760px){
+  .toolbar{width:calc(100% - 20px)}
+  .sheet{width:calc(100% - 20px);border-radius:12px}
+  .header{grid-template-columns:1fr;padding:23px}
+  .invoice-meta{text-align:left}
+  .meta-grid{text-align:left}
+  .tracking-band{margin:18px 23px 0;align-items:flex-start;flex-direction:column}
+  .content{padding:20px 23px 25px}
+  .parties,.lower{grid-template-columns:1fr}
+  .verification{grid-template-columns:1fr}
+  .footer{padding:16px 23px;flex-direction:column}
+  .table-wrap{overflow-x:auto}
+  table{min-width:720px}
+}
+
+@page{size:A4;margin:10mm}
+@media print{
+  body{background:#fff;font-size:12px}
+  .toolbar{display:none}
+  .sheet{
+    width:100%;margin:0;border:0;box-shadow:none;border-radius:0
+  }
+  .topline{height:3px}
+  .header{padding:18px 22px 16px}
+  .tracking-band{margin:14px 22px 0;padding:12px 15px}
+  .tracking-id{font-size:21px}
+  .content{padding:17px 22px 22px}
+  .footer{padding:12px 22px}
+  .party,.info-card,.totals,.terms,.verification{break-inside:avoid}
+  table{break-inside:auto}
+  tr{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="toolbar">
+  <div class="left">
+    <button onclick="history.back()">← Back</button>
+  </div>
+  <div class="right">
+    <button onclick="window.print()" class="primary">Print / Save PDF</button>
+  </div>
+</div>
+
+<main class="sheet" id="invoice">
+  <div class="topline"></div>
+
+  <header class="header">
+    <div>
+      <div class="brand-row">
+        <div class="logo">RC</div>
+        <div class="brand">
+          <h1>RC COURIER</h1>
+          <small>UAE • GCC LOGISTICS</small>
+        </div>
+      </div>
+
+      <div class="company-info">
+        <strong>RC Courier UAE LLC</strong><br>
+        Dubai, United Arab Emirates<br>
+        TRN: <strong>100987654321003</strong><br>
+        Email: support@rccourier.ae · Tel: +971 4 800 2684
+      </div>
+    </div>
+
+    <div class="invoice-meta">
+      <div class="label">VAT DOCUMENT</div>
+      <h2>TAX INVOICE</h2>
+      <div class="meta-grid">
+        <div><span>Invoice No.</span><b id="invoiceNo">INV-2026-000041</b></div>
+        <div><span>Issue Date</span><b id="issueDate">26 Aug 2026</b></div>
+        <div><span>Supply Date</span><b id="supplyDate">26 Aug 2026</b></div>
+        <div><span>Currency</span><b>AED</b></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="tracking-band">
+    <div>
+      <div class="tracking-label">Prominent Shipment Tracking ID</div>
+      <div class="tracking-id" id="trackingId">AE-RCC-784251-2026</div>
+    </div>
+    <div class="tracking-status">BOOKED · EXPRESS SERVICE</div>
+  </section>
+
+  <section class="content">
+    <div class="parties">
+      <article class="party">
+        <div class="eyebrow">Supplier / Shipper</div>
+        <h3>RC Courier UAE LLC</h3>
+        <p>Dubai, United Arab Emirates</p>
+        <p><strong>TRN:</strong> 100987654321003</p>
+        <p><strong>Contact:</strong> +971 4 800 2684</p>
+      </article>
+
+      <article class="party">
+        <div class="eyebrow">Recipient / Customer</div>
+        <h3>Gulf Trading FZE</h3>
+        <p>Dubai Logistics City, Dubai, UAE</p>
+        <p><strong>TRN:</strong> 100123456789003</p>
+        <p><strong>Contact:</strong> +971 50 555 0188</p>
+      </article>
+    </div>
+
+    <div class="section-title">
+      <h3>Services Supplied</h3>
+      <span>All amounts expressed in UAE Dirham (AED)</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:35%">Description of service</th>
+            <th style="width:12%">Qty</th>
+            <th class="num">Unit price<br>(AED)</th>
+            <th class="num">Discount<br>(AED)</th>
+            <th class="num">VAT<br>(5%)</th>
+            <th class="num">Line total<br>(AED)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="service-name">Same-Day Express Courier</div>
+              <div class="service-note">Door-to-door UAE express delivery</div>
+            </td>
+            <td>1 shipment</td>
+            <td class="num">64.00</td>
+            <td class="num">0.00</td>
+            <td class="num">3.20</td>
+            <td class="num"><strong>67.20</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lower">
+      <div class="info-card">
+        <h4>Shipment & Payment Information</h4>
+        <p><b>Origin:</b> Dubai, UAE</p>
+        <p><b>Destination:</b> Abu Dhabi, UAE</p>
+        <p><b>Package:</b> 1 parcel · 1.00 kg</p>
+        <p><b>Payment method:</b> Card / Online</p>
+        <p style="margin-top:12px"><span class="payment-badge">✓ PAYMENT STATUS: PAID</span></p>
+      </div>
+
+      <div class="totals">
+        <div class="total-line"><span>Taxable amount</span><b>64.00 AED</b></div>
+        <div class="total-line"><span>VAT rate</span><b>5%</b></div>
+        <div class="total-line"><span>VAT amount</span><b>3.20 AED</b></div>
+        <div class="total-line grand"><span>Total incl. VAT</span><b>67.20 AED</b></div>
+        <div class="total-line paid"><span>Amount paid</span><b>67.20 AED</b></div>
+        <div class="total-line due"><span>Balance due</span><b>0.00 AED</b></div>
+      </div>
+    </div>
+
+    <section class="verification">
+      <div class="qr-box"><div id="qrcode" aria-label="Invoice verification QR code"></div></div>
+      <div class="verify">
+        <h3>Invoice Verification</h3>
+        <p>Scan to verify this invoice and confirm its shipment and payment information through RC Courier's official verification portal.</p>
+        <p class="code">Invoice: <span id="verifyInvoice">INV-2026-000041</span></p>
+        <p class="code">Tracking: <span id="verifyTracking">AE-RCC-784251-2026</span></p>
+        <p class="code">Verification: https://rccourier.ae/verify/invoice/INV-2026-000041</p>
+      </div>
+    </section>
+
+    <section class="terms">
+      <h3>Terms & Conditions — UAE Courier Services</h3>
+      <ol>
+        <li><strong>Tax invoice:</strong> This document records the taxable supply identified above. VAT is calculated at the applicable UAE VAT rate.</li>
+        <li><strong>Payment:</strong> Unless otherwise agreed in writing, outstanding amounts are payable according to the customer's approved account terms.</li>
+        <li><strong>Delivery:</strong> Delivery times are estimates unless a guaranteed service level has been expressly confirmed by RC Courier.</li>
+        <li><strong>Shipment contents:</strong> The sender is responsible for accurate declarations and must not tender prohibited, restricted, hazardous or undeclared goods.</li>
+        <li><strong>Claims:</strong> Loss, damage or delay claims are subject to RC Courier's applicable carriage terms, service conditions and statutory requirements.</li>
+        <li><strong>VAT:</strong> Where a VAT treatment differs from the standard treatment, the applicable tax treatment and required statement should be shown on the final issued invoice.</li>
+        <li><strong>Electronic verification:</strong> The QR code is provided for document verification and does not replace the accounting records required by applicable UAE law.</li>
+      </ol>
+    </section>
+  </section>
+
+  <footer class="footer">
+    <div><strong>RC Courier UAE LLC</strong> · Dubai, United Arab Emirates · TRN 100987654321003</div>
+    <div>support@rccourier.ae · rccourier.ae</div>
+  </footer>
+</main>
+
+<!--
+  QR generation:
+  qrcodejs creates an actual QR symbol from the verification URL.
+  For production, self-host this library so printed invoices remain independent
+  of third-party CDN availability.
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  const invoice = document.getElementById('invoiceNo').textContent.trim();
+  const tracking = document.getElementById('trackingId').textContent.trim();
+
+  document.getElementById('verifyInvoice').textContent = invoice;
+  document.getElementById('verifyTracking').textContent = tracking;
+
+  const verificationUrl =
+    'https://rccourier.ae/verify/invoice/' + encodeURIComponent(invoice);
+
+  const qr = document.getElementById('qrcode');
+  if(window.QRCode){
+    new QRCode(qr,{
+      text: verificationUrl,
+      width:90,
+      height:90,
+      colorDark:'#16324a',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+  }else{
+    qr.innerHTML = '<span style="font-size:9px;text-align:center;color:#61778b">QR library unavailable</span>';
+  }
+})();
+</script>
+</body>
+</html>
