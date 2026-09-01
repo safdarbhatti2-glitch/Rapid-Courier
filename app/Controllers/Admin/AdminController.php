@@ -281,8 +281,9 @@ class AdminController
                 );
             }
 
+            $now = date('Y-m-d H:i:s');
             // Update overall shipment status to final generated status
-            Database::execute("UPDATE shipments SET status = ?, updated_at = NOW() WHERE id = ?", [$lastStatus, $shipmentId]);
+            Database::execute("UPDATE shipments SET status = ?, updated_at = ? WHERE id = ?", [$lastStatus, $now, $shipmentId]);
 
             Database::commit();
 
@@ -396,32 +397,33 @@ class AdminController
 
         try {
             Database::beginTransaction();
+            $now = date('Y-m-d H:i:s');
 
             // 1. Update Origin Address
             Database::execute("
                 UPDATE customer_addresses 
-                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = NOW() 
+                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = ? 
                 WHERE id = ?
-            ", [$senderName, $senderAddress, $senderArea, $senderEmirate, $senderEmirate, $shipment['origin_address_id']]);
+            ", [$senderName, $senderAddress, $senderArea, $senderEmirate, $senderEmirate, $now, $shipment['origin_address_id']]);
 
             // 2. Update Destination Address
             Database::execute("
                 UPDATE customer_addresses 
-                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = NOW() 
+                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = ? 
                 WHERE id = ?
-            ", [$receiverName, $receiverAddress, $receiverArea, $receiverEmirate, $receiverEmirate, $shipment['destination_address_id']]);
+            ", [$receiverName, $receiverAddress, $receiverArea, $receiverEmirate, $receiverEmirate, $now, $shipment['destination_address_id']]);
 
             // 3. Update Shipment Record
             Database::execute("
                 UPDATE shipments 
                 SET tracking_number = ?, status = ?, service_id = ?, weight_kg = ?, 
                     length_cm = ?, width_cm = ?, height_cm = ?, declared_value = ?, 
-                    subtotal = ?, discount = ?, tax = ?, total = ?, updated_at = NOW() 
+                    subtotal = ?, discount = ?, tax = ?, total = ?, updated_at = ? 
                 WHERE id = ?
             ", [
                 $trackingNum, $status, $serviceId, $pricing['chargeable_weight'],
                 $lengthCm, $widthCm, $heightCm, $declaredValue,
-                $subtotal, $discount, $tax, $total, (int)$id
+                $subtotal, $discount, $tax, $total, $now, (int)$id
             ]);
 
             // 4. Update Shipment Items
@@ -444,9 +446,9 @@ class AdminController
             if ($invoice) {
                 Database::execute("
                     UPDATE invoices 
-                    SET subtotal = ?, discount = ?, tax = ?, total = ?, balance_due = (total - amount_paid), updated_at = NOW() 
+                    SET subtotal = ?, discount = ?, tax = ?, total = ?, balance_due = (total - amount_paid), updated_at = ? 
                     WHERE id = ?
-                ", [$subtotal, $discount, $tax, $total, $invoice['id']]);
+                ", [$subtotal, $discount, $tax, $total, $now, $invoice['id']]);
 
                 Database::execute("
                     UPDATE invoice_items 
@@ -677,12 +679,13 @@ class AdminController
 
         try {
             Database::beginTransaction();
+            $now = date('Y-m-d H:i:s');
             foreach ($fields as $key => $item) {
                 $exists = Database::fetchOne("SELECT id FROM settings WHERE setting_key = ?", [$key]);
                 if ($exists) {
-                    Database::execute("UPDATE settings SET setting_value = ?, updated_at = NOW() WHERE setting_key = ?", [$item['val'], $key]);
+                    Database::execute("UPDATE settings SET setting_value = ?, updated_at = ? WHERE setting_key = ?", [$item['val'], $now, $key]);
                 } else {
-                    Database::execute("INSERT INTO settings (setting_key, setting_value, `group`, updated_at) VALUES (?, ?, ?, NOW())", [$key, $item['val'], $item['group']]);
+                    Database::execute("INSERT INTO settings (setting_key, setting_value, `group`, updated_at) VALUES (?, ?, ?, ?)", [$key, $item['val'], $item['group'], $now]);
                 }
             }
 
