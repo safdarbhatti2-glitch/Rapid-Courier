@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'RC Courier | UAE & GCC Logistics') ?></title>
+    <title><?= e($title ?? 'Rapid Courier | UAE & GCC Logistics') ?></title>
+    <meta name="description" content="Rapid Courier UAE — Premium courier, same-day delivery, GCC road freight and worldwide logistics services.">
+    <meta property="og:site_name" content="Rapid Courier UAE">
+    <meta property="og:title" content="<?= e($title ?? 'Rapid Courier UAE | Premium Logistics') ?>">
+    <meta property="og:description" content="Rapid Courier UAE — Premium courier, same-day delivery, GCC road freight and worldwide logistics services.">
+    <meta property="og:image" content="<?= \App\Core\View::url('/assets/images/rc_logo_hd.png') ?>">
+    <meta property="og:url" content="<?= \App\Core\View::url('/') ?>">
+    <meta property="og:type" content="website">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

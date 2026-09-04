@@ -19,7 +19,7 @@ class HomeController
         $locations = Database::fetchAll("SELECT * FROM locations WHERE active = 1 LIMIT 3");
 
         View::render('public.home', [
-            'title'     => 'Antigravity Express UAE — Premium Logistics & Express Courier',
+            'title'     => 'Rapid Courier UAE — Premium Logistics & Express Courier',
             'services'  => $services,
             'locations' => $locations
         ], 'main');
