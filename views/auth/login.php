@@ -1,5 +1,5 @@
 <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; text-align: center;">Welcome Back</h2>
-<p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 2rem;">Sign in to your Antigravity Express account</p>
+<p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 2rem;">Sign in to your RC Courier account</p>
 
 <form action="<?= \App\Core\View::url('/login') ?>" method="POST">
     <?= \App\Core\View::csrfField() ?>

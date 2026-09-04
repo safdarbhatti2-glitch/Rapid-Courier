@@ -13,7 +13,7 @@ class AuthController
 {
     public function showLogin(Request $request): void
     {
-        View::render('auth.login', ['title' => 'Login — Antigravity Express UAE'], 'auth');
+        View::render('auth.login', ['title' => 'Login — RC Courier UAE'], 'auth');
     }
 
     public function login(Request $request): void

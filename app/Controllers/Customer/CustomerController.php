@@ -26,7 +26,7 @@ class CustomerController
         $recentShipments = Database::fetchAll("SELECT s.*, serv.name as service_name FROM shipments s JOIN services serv ON s.service_id = serv.id WHERE s.customer_id = ? ORDER BY s.created_at DESC LIMIT 5", [$customerId]);
 
         View::render('customer.dashboard', [
-            'title'            => 'Customer Dashboard — Antigravity Express UAE',
+            'title'            => 'Customer Dashboard — RC Courier UAE',
             'user'             => $user,
             'shipmentsCount'   => $shipmentsCount,
             'invoicesCount'    => $invoicesCount,

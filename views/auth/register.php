@@ -1,5 +1,5 @@
 <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; text-align: center;">Create Account</h2>
-<p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 2rem;">Register for Antigravity Express UAE</p>
+<p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 2rem;">Register for RC Courier UAE</p>
 
 <form action="<?= \App\Core\View::url('/register') ?>" method="POST">
     <?= \App\Core\View::csrfField() ?>
