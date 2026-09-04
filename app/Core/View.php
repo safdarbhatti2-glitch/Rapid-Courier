@@ -60,14 +60,15 @@ class View
             
             $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
             $dir = rtrim(dirname($scriptName), '/\\');
-            if ($dir === '.' || $dir === '/' || $dir === '\\') {
+            if ($dir === '/public' || $dir === '\public' || $dir === '.' || $dir === '/' || $dir === '\\') {
                 $dir = '';
             }
             return $scheme . '://' . $host . $dir;
         }
 
         $appUrl = EnvLoader::get('APP_URL', '');
-        return !empty($appUrl) ? rtrim($appUrl, '/') : '';
+        $appUrl = preg_replace('#/public/?$#i', '', rtrim($appUrl, '/'));
+        return !empty($appUrl) ? $appUrl : '';
     }
 
     public static function asset(string $path): string

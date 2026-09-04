@@ -63,6 +63,11 @@ class Database
         return self::$instance;
     }
 
+    public static function getDriverName(): string
+    {
+        return self::getConnection()->getAttribute(PDO::ATTR_DRIVER_NAME);
+    }
+
     public static function fetchAll(string $sql, array $params = []): array
     {
         $stmt = self::getConnection()->prepare($sql);

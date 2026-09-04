@@ -24,9 +24,15 @@ class Request
         $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
         $baseDir = dirname($scriptName);
 
-        // Normalize base path for subfolder setups (e.g. /RC courier/public)
-        if ($baseDir !== '/' && str_starts_with($uri, $baseDir)) {
+        // Normalize base path for subfolder setups
+        if ($baseDir !== '/' && $baseDir !== '/public' && $baseDir !== '\public' && str_starts_with($uri, $baseDir)) {
             $uri = substr($uri, strlen($baseDir));
+        }
+
+        if (str_starts_with($uri, '/public/')) {
+            $uri = substr($uri, 7);
+        } elseif ($uri === '/public') {
+            $uri = '/';
         }
 
         $position = strpos($uri, '?');

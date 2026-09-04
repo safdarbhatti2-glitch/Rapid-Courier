@@ -36,7 +36,12 @@ function assertTest(string $name, bool $condition, string $failureDetails = ''):
 
 try {
     // 1. Database Connection & Table Audit
-    $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM information_schema.tables WHERE table_schema = ?", [EnvLoader::get('DB_NAME')])['cnt'] ?? 0;
+    $driver = Database::getDriverName();
+    if ($driver === 'sqlite') {
+        $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM sqlite_master WHERE type='table'")['cnt'] ?? 0;
+    } else {
+        $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM information_schema.tables WHERE table_schema = ?", [EnvLoader::get('DB_NAME')])['cnt'] ?? 0;
+    }
     assertTest("Database 27 Tables Migration Audit", $tablesCount >= 27, "Expected >=27 tables, found {$tablesCount}");
 
     // 2. Pricing Engine Unit Tests
