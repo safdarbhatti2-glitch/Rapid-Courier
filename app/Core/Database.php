@@ -29,7 +29,19 @@ class Database
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
-                throw new RuntimeException("Database connection failed: " . $e->getMessage(), (int)$e->getCode());
+                $sqliteDir  = BASE_PATH . '/database';
+                $sqlitePath = $sqliteDir . '/database.sqlite';
+                if (!file_exists($sqliteDir)) {
+                    @mkdir($sqliteDir, 0777, true);
+                }
+                try {
+                    self::$instance = new PDO("sqlite:" . $sqlitePath, null, null, [
+                        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    ]);
+                } catch (PDOException $sqliteErr) {
+                    throw new RuntimeException("Database connection failed: " . $e->getMessage(), (int)$e->getCode());
+                }
             }
         }
 

@@ -61,7 +61,7 @@ class AuthController
         Session::set('user', $sessionUser);
 
         // Update last login
-        Database::execute("UPDATE users SET last_login_at = NOW() WHERE id = ?", [$user['id']]);
+        Database::execute("UPDATE users SET last_login_at = ? WHERE id = ?", [date('Y-m-d H:i:s'), $user['id']]);
 
         AuditService::log('user_login', 'user', $user['id']);
 

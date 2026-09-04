@@ -92,7 +92,7 @@ class QuoteService
         $shipment = ShipmentService::createShipment($shipmentData);
 
         // Update quote status
-        Database::execute("UPDATE quotes SET status = 'CONVERTED', updated_at = NOW() WHERE id = ?", [$quoteId]);
+        Database::execute("UPDATE quotes SET status = 'CONVERTED', updated_at = ? WHERE id = ?", [date('Y-m-d H:i:s'), $quoteId]);
 
         AuditService::log('quote_convert_shipment', 'quote', $quoteId, ['status' => $quote['status']], ['status' => 'CONVERTED', 'shipment_id' => $shipment['id']]);
 

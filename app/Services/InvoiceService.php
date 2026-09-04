@@ -39,7 +39,8 @@ class InvoiceService
             $issueDate = date('Y-m-d');
             $dueDate   = date('Y-m-d', strtotime('+30 days'));
 
-            Database::execute("INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES (?, ?, ?, 'ISSUED', ?, ?, 'AED', ?, 0.00, ?, ?, 0.00, ?, ?, ?, NOW())", [
+            $issuedAt = date('Y-m-d H:i:s');
+            Database::execute("INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due, trn, notes, issued_at) VALUES (?, ?, ?, 'ISSUED', ?, ?, 'AED', ?, 0.00, ?, ?, 0.00, ?, ?, ?, ?)", [
                 $invoiceNumber,
                 $data['customer_id'],
                 $data['shipment_id'] ?? null,
@@ -50,7 +51,8 @@ class InvoiceService
                 $total,
                 $total,
                 $data['trn'] ?? '100987654321003',
-                $data['notes'] ?? 'UAE Commercial Courier Services Invoice'
+                $data['notes'] ?? 'UAE Commercial Courier Services Invoice',
+                $issuedAt
             ]);
 
             $invoiceId = Database::lastInsertId();
@@ -128,19 +130,21 @@ class InvoiceService
             $nextSeq = str_pad((string)($countRow['cnt'] + 1), 6, '0', STR_PAD_LEFT);
             $payNumber = "PAY-{$year}-{$nextSeq}";
 
-            Database::execute("INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at, created_by) VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', NOW(), ?)", [
+            $now = date('Y-m-d H:i:s');
+            Database::execute("INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at, created_by) VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', ?, ?)", [
                 $payNumber,
                 $invoiceId,
                 $invoice['customer_id'],
                 $amount,
                 $method,
                 $reference,
+                $now,
                 $createdBy
             ]);
 
             // Update Invoice Status
-            Database::execute("UPDATE invoices SET amount_paid = ?, balance_due = ?, status = ?, updated_at = NOW() WHERE id = ?", [
-                $newPaid, $newBalance, $newStatus, $invoiceId
+            Database::execute("UPDATE invoices SET amount_paid = ?, balance_due = ?, status = ?, updated_at = ? WHERE id = ?", [
+                $newPaid, $newBalance, $newStatus, $now, $invoiceId
             ]);
 
             AuditService::log('payment_record', 'invoice', $invoiceId, ['amount_paid' => $currentPaid], ['amount_paid' => $newPaid, 'payment_number' => $payNumber]);
@@ -171,7 +175,8 @@ class InvoiceService
             throw new RuntimeException("Cannot void a fully paid invoice.");
         }
 
-        Database::execute("UPDATE invoices SET status = 'VOID', voided_at = NOW(), updated_at = NOW() WHERE id = ?", [$invoiceId]);
+        $now = date('Y-m-d H:i:s');
+        Database::execute("UPDATE invoices SET status = 'VOID', voided_at = ?, updated_at = ? WHERE id = ?", [$now, $now, $invoiceId]);
 
         AuditService::log('invoice_void', 'invoice', $invoiceId, ['status' => $invoice['status']], ['status' => 'VOID']);
 

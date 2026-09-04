@@ -18,20 +18,15 @@ $user = EnvLoader::get('DB_USER', 'root');
 $pass = EnvLoader::get('DB_PASS', '');
 
 try {
-    echo "Connecting to MySQL server at {$host}:{$port}...\n";
-    $pdo = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-
-    // Create database if not exists
-    echo "Ensuring database `{$dbName}` exists...\n";
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    $pdo->exec("USE `{$dbName}`;");
+    $pdo = \App\Core\Database::getConnection();
+    $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    echo "Connected using {$driver} database engine...\n";
 
     echo "Executing schema migration...\n";
 
-    // Disable foreign key checks during schema creation
-    $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+    if ($driver === 'mysql') {
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+    }
 
     $tables = [
         "roles" => "CREATE TABLE IF NOT EXISTS `roles` (
@@ -455,11 +450,22 @@ try {
     ];
 
     foreach ($tables as $name => $sql) {
+        if ($driver === 'sqlite') {
+            $sql = preg_replace('/ENGINE\s*=\s*InnoDB.*$/i', '', $sql);
+            $sql = str_replace('BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
+            $sql = str_replace('INT UNSIGNED AUTO_INCREMENT PRIMARY KEY', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
+            $sql = preg_replace('/ENUM\([^)]+\)/i', 'TEXT', $sql);
+            $sql = str_replace('ON UPDATE CURRENT_TIMESTAMP', '', $sql);
+            $sql = preg_replace('/,\s*INDEX\s+`[^`]+`\s*\([^)]+\)/i', '', $sql);
+            $sql = preg_replace('/INDEX\s+`[^`]+`\s*\([^)]+\),?/i', '', $sql);
+        }
         $pdo->exec($sql);
         echo " -> Table `{$name}` verified/created.\n";
     }
 
-    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    if ($driver === 'mysql') {
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    }
     echo "\nAll database migrations executed successfully!\n";
 
 } catch (Exception $e) {

@@ -134,7 +134,7 @@ class CustomerController
         $phone = trim($request->input('phone', ''));
 
         if (!empty($name)) {
-            Database::execute("UPDATE users SET name = ?, phone = ?, updated_at = NOW() WHERE id = ?", [$name, $phone, $user['id']]);
+            Database::execute("UPDATE users SET name = ?, phone = ?, updated_at = ? WHERE id = ?", [$name, $phone, date('Y-m-d H:i:s'), $user['id']]);
             $user['name'] = $name;
             $user['phone'] = $phone;
             Session::set('user', $user);

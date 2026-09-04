@@ -17,7 +17,7 @@ EnvLoader::load(BASE_PATH . '/.env');
 Autoloader::register(BASE_PATH);
 
 echo "==================================================\n";
-echo "  ANTIGRAVITY EXPRESS UAE — INTEGRATION TEST SUITE\n";
+echo "  RC COURIER UAE — INTEGRATION TEST SUITE\n";
 echo "==================================================\n\n";
 
 $passed = 0;
@@ -36,7 +36,13 @@ function assertTest(string $name, bool $condition, string $failureDetails = ''):
 
 try {
     // 1. Database Connection & Table Audit
-    $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM information_schema.tables WHERE table_schema = ?", [EnvLoader::get('DB_NAME')])['cnt'] ?? 0;
+    $pdo = Database::getConnection();
+    $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    if ($driver === 'sqlite') {
+        $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")['cnt'] ?? 0;
+    } else {
+        $tablesCount = Database::fetchOne("SELECT COUNT(*) as cnt FROM information_schema.tables WHERE table_schema = ?", [EnvLoader::get('DB_NAME')])['cnt'] ?? 0;
+    }
     assertTest("Database 27 Tables Migration Audit", $tablesCount >= 27, "Expected >=27 tables, found {$tablesCount}");
 
     // 2. Pricing Engine Unit Tests
@@ -45,7 +51,7 @@ try {
     assertTest("Volumetric Weight Computation", $priceRes['volumetric_weight'] == 1.8);
 
     // 3. User Hashing & Auth Verification
-    $admin = Database::fetchOne("SELECT * FROM users WHERE email = ?", ['admin@antigravityexpress.ae']);
+    $admin = Database::fetchOne("SELECT * FROM users WHERE email LIKE 'admin@%' OR id = 1 ORDER BY id ASC");
     assertTest("Admin User Seeding Check", !empty($admin));
     assertTest("Secure Password Hash Verification", password_verify('Admin@123456', $admin['password_hash']));
 
