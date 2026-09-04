@@ -18,16 +18,20 @@ $user = EnvLoader::get('DB_USER', 'root');
 $pass = EnvLoader::get('DB_PASS', '');
 
 try {
-    echo "Connecting to database...\n";
-    $pdo = App\Core\Database::getConnection();
-    $driverName = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    echo "Connecting to MySQL server at {$host}:{$port}...\n";
+    $pdo = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
 
-    echo "Database driver active: {$driverName}\n";
+    // Create database if not exists
+    echo "Ensuring database `{$dbName}` exists...\n";
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+    $pdo->exec("USE `{$dbName}`;");
+
     echo "Executing schema migration...\n";
 
-    if ($driverName === 'mysql') {
-        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
-    }
+    // Disable foreign key checks during schema creation
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
 
     $tables = [
         "roles" => "CREATE TABLE IF NOT EXISTS `roles` (
@@ -451,30 +455,11 @@ try {
     ];
 
     foreach ($tables as $name => $sql) {
-        if ($driverName === 'sqlite') {
-            $sql = preg_replace('/BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
-            $sql = preg_replace('/AUTO_INCREMENT/i', '', $sql);
-            $sql = preg_replace('/ENGINE=InnoDB/i', '', $sql);
-            $sql = preg_replace('/DEFAULT CHARSET=\w+/i', '', $sql);
-            $sql = preg_replace('/COLLATE=\w+/i', '', $sql);
-            $sql = preg_replace('/ON UPDATE CURRENT_TIMESTAMP/i', '', $sql);
-            $sql = preg_replace('/ENUM\([^)]+\)/i', 'TEXT', $sql);
-            $sql = preg_replace('/,\s*INDEX `[^`]+` \([^)]+\)/i', '', $sql);
-            $sql = preg_replace('/INDEX `[^`]+` \([^)]+\)/i', '', $sql);
-            $sql = preg_replace('/,\s*\)/i', "\n)", $sql);
-        }
-        try {
-            $pdo->exec($sql);
-            echo " -> Table `{$name}` verified/created.\n";
-        } catch (Exception $ex) {
-            echo "\n[ERROR] Table `{$name}` failed!\nError: " . $ex->getMessage() . "\nSQL:\n" . $sql . "\n";
-            throw $ex;
-        }
+        $pdo->exec($sql);
+        echo " -> Table `{$name}` verified/created.\n";
     }
 
-    if ($driverName === 'mysql') {
-        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
-    }
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
     echo "\nAll database migrations executed successfully!\n";
 
 } catch (Exception $e) {

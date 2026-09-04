@@ -61,7 +61,7 @@ class AuthController
         Session::set('user', $sessionUser);
 
         // Update last login
-        Database::execute("UPDATE users SET last_login_at = ? WHERE id = ?", [date('Y-m-d H:i:s'), $user['id']]);
+        Database::execute("UPDATE users SET last_login_at = NOW() WHERE id = ?", [$user['id']]);
 
         AuditService::log('user_login', 'user', $user['id']);
 
@@ -74,7 +74,7 @@ class AuthController
 
     public function showRegister(Request $request): void
     {
-        View::render('auth.register', ['title' => 'Customer Registration — Antigravity Express UAE'], 'auth');
+        View::render('auth.register', ['title' => 'Customer Registration — RC Courier UAE'], 'auth');
     }
 
     public function register(Request $request): void

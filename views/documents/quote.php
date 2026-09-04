@@ -21,7 +21,7 @@
     <div class="quote-box">
         <div class="header">
             <div>
-                <h2 style="margin:0; font-size:1.5rem; color:#0f172a;"><span style="color:#dc2626;">ANTIGRAVITY</span> EXPRESS</h2>
+                <h2 style="margin:0; font-size:1.5rem; color:#0f172a;"><span style="color:#f1c45e;">RC</span> COURIER UAE</h2>
                 <p style="font-size:0.85rem; color:#64748b;">Official Logistics Quotation</p>
             </div>
             <div style="text-align:right;">

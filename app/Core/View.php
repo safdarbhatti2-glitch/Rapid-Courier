@@ -50,36 +50,15 @@ class View
         return '<input type="hidden" name="_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
     }
 
-    public static function getBaseUrl(): string
-    {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-                    || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-            $scheme = $isHttps ? 'https' : 'http';
-            $host = $_SERVER['HTTP_HOST'];
-            
-            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-            $dir = rtrim(dirname($scriptName), '/\\');
-            if ($dir === '/public' || $dir === '\public' || $dir === '.' || $dir === '/' || $dir === '\\') {
-                $dir = '';
-            }
-            return $scheme . '://' . $host . $dir;
-        }
-
-        $appUrl = EnvLoader::get('APP_URL', '');
-        $appUrl = preg_replace('#/public/?$#i', '', rtrim($appUrl, '/'));
-        return !empty($appUrl) ? $appUrl : '';
-    }
-
     public static function asset(string $path): string
     {
-        $baseUrl = self::getBaseUrl();
+        $baseUrl = rtrim(EnvLoader::get('APP_URL', '/'), '/');
         return $baseUrl . '/' . ltrim($path, '/');
     }
 
     public static function url(string $path = ''): string
     {
-        $baseUrl = self::getBaseUrl();
+        $baseUrl = rtrim(EnvLoader::get('APP_URL', '/'), '/');
         return $baseUrl . '/' . ltrim($path, '/');
     }
 

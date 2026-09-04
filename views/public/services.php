@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="RC Courier UAE — premium same-day, next-day, GCC freight, international and logistics services with transparent AED pricing.">
 <title>Services | RC Courier UAE</title>
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
+<link rel="icon" type="image/png" sizes="192x192" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+<link rel="apple-touch-icon" sizes="180x180" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+<link rel="shortcut icon" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +28,7 @@ button,input,select{font:inherit}
 button{cursor:pointer}
 a{text-decoration:none;color:inherit}
 .container{width:min(1160px,92%);margin:auto}
-.topbar{height:80px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.84);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.topbar{height:74px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.84);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
 .nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .brand{display:flex;align-items:center;gap:9px;font-family:Manrope;font-weight:800;white-space:nowrap}
 .logo{width:38px;height:38px;border:1px solid rgba(220,168,63,.5);border-radius:11px;display:grid;place-items:center;color:var(--gold2);background:linear-gradient(145deg,#172234,#080d15);font-size:13px}
@@ -123,12 +128,9 @@ footer{padding:65px 0 20px;border-top:1px solid var(--line);background:#03070d}
 <body>
 <header class="topbar">
   <div class="container nav">
-    <a class="brand" href="<?= \App\Core\View::url('/') ?>" aria-label="RC Courier home" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
-      <img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" srcset="<?= \App\Core\View::url('/assets/images/rc_logo_256.png') ?> 2x, <?= \App\Core\View::url('/assets/images/rc_logo_hd.png') ?> 3x" alt="RC Courier Logo" style="height: 48px; width: 48px; min-width: 48px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1.5px solid rgba(241,196,94,0.45); image-rendering: -webkit-optimize-contrast;">
-      <div class="brand-text" style="display:flex; flex-direction:column; justify-content:center;">
-        <span style="font-family:'Manrope','Inter',sans-serif; font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -0.4px; line-height: 1.1;">RC COURIER</span>
-        <small style="font-family:'Inter',sans-serif; font-size: 9px; font-weight: 700; color: #f1c45e; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;">UAE • GCC LOGISTICS</small>
-      </div>
+    <a href="<?= \App\Core\View::url('/') ?>" class="brand">
+        <div class="logo" style="padding:0; border:none; background:transparent;"><img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:42px; width:42px; border-radius:10px; object-fit:cover;"></div>
+        <div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div>
     </a>
     <nav class="links">
       <a href="<?= \App\Core\View::url('/services') ?>">Services</a>
@@ -144,6 +146,9 @@ footer{padding:65px 0 20px;border-top:1px solid var(--line);background:#03070d}
       <?php if ($user): ?>
           <?php $dashUrl = ($user['role_name'] === 'customer') ? '/customer' : '/admin'; ?>
           <a href="<?= \App\Core\View::url($dashUrl) ?>" class="btn btn-gold">Dashboard</a>
+      <?php else: ?>
+          <a href="<?= \App\Core\View::url('/login') ?>" class="btn btn-gold">Login</a>
+          <a href="<?= \App\Core\View::url('/register') ?>" class="btn btn-dark">Register</a>
       <?php endif; ?>
       <button class="menu" aria-label="Menu">☰</button>
     </div>

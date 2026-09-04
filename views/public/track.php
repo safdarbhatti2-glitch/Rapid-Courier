@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= e($title ?? 'RC Courier — Shipment Tracking') ?></title>
 <meta name="description" content="RC Courier UAE shipment tracking and delivery status portal.">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
+<link rel="icon" type="image/png" sizes="192x192" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+<link rel="apple-touch-icon" sizes="180x180" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+<link rel="shortcut icon" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -38,7 +43,7 @@ body{
 a{text-decoration:none;color:inherit}
 .container{width:min(1120px,calc(100% - 40px));margin:auto}
 .topbar{
-  height:80px;background:#07101f;color:#fff;border-bottom:1px solid #1d2b40;
+  height:76px;background:#07101f;color:#fff;border-bottom:1px solid #1d2b40;
   position:sticky;top:0;z-index:50;
 }
 .nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
@@ -216,6 +221,9 @@ footer p,footer a{font-size:11px;color:#8fa0b4;display:block;margin:8px 0}
       <?php if ($user): ?>
           <?php $dashUrl = ($user['role_name'] === 'customer') ? '/customer' : '/admin'; ?>
           <a href="<?= \App\Core\View::url($dashUrl) ?>" class="btn btn-gold">Dashboard</a>
+      <?php else: ?>
+          <a href="<?= \App\Core\View::url('/login') ?>" class="btn btn-gold">Login</a>
+          <a href="<?= \App\Core\View::url('/register') ?>" class="btn btn-dark">Register</a>
       <?php endif; ?>
     </div>
   </div>

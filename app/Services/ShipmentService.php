@@ -54,26 +54,25 @@ class ShipmentService
             $destAddressId   = self::ensureAddress($data['customer_id'], $data['receiver_address'], $data['destination_emirate']);
 
             $pickupAt = !empty($data['pickup_at']) ? date('Y-m-d H:i:s', strtotime($data['pickup_at'])) : date('Y-m-d H:i:s');
-            $estDelivery = date('Y-m-d H:i:s', strtotime($pickupAt . ' +1 day'));
 
             // Insert Shipment
-            Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES (?, ?, ?, ?, ?, ?, 'BOOKED', ?, ?, ?, ?, ?, ?, 0.00, ?, ?, 'AED', ?, ?)", [
+            Database::execute("INSERT INTO shipments (reference_number, tracking_number, customer_id, service_id, origin_address_id, destination_address_id, status, weight_kg, length_cm, width_cm, height_cm, declared_value, subtotal, discount, tax, total, currency, pickup_at, estimated_delivery_at) VALUES (?, ?, ?, ?, ?, ?, 'BOOKED', ?, ?, ?, ?, ?, ?, 0.00, ?, ?, 'AED', ?, DATE_ADD(?, INTERVAL 1 DAY))", [
                 $refNumber,
                 $trkNumber,
                 $data['customer_id'],
                 $data['service_id'],
                 $originAddressId,
                 $destAddressId,
-                (float)$data['weight_kg'],
-                (float)($data['length_cm'] ?? 10),
-                (float)($data['width_cm'] ?? 10),
-                (float)($data['height_cm'] ?? 10),
-                (float)($data['declared_value'] ?? 0),
+                $pricing['chargeable_weight'],
+                $data['length_cm'] ?? 10,
+                $data['width_cm'] ?? 10,
+                $data['height_cm'] ?? 10,
+                $data['declared_value'] ?? 0,
                 $pricing['subtotal'],
                 $pricing['tax'],
                 $pricing['total'],
                 $pickupAt,
-                $estDelivery
+                $pickupAt
             ]);
 
             $shipmentId = Database::lastInsertId();
@@ -98,20 +97,14 @@ class ShipmentService
             ]);
 
             // Auto-Generate Linked Tax Invoice for New Shipment
-            $invNum   = 'INV-' . date('Y') . '-' . str_pad((string)mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
-            $today    = date('Y-m-d');
-            $dueDate  = date('Y-m-d', strtotime('+14 days'));
-            $now      = date('Y-m-d H:i:s');
-
+            $invNum = 'INV-' . date('Y') . '-' . str_pad((string)mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
             Database::execute("
                 INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due)
-                VALUES (?, ?, ?, 'PAID', ?, ?, 'AED', ?, 0.00, ?, ?, ?, 0.00)
+                VALUES (?, ?, ?, 'PAID', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY), 'AED', ?, 0.00, ?, ?, ?, 0.00)
             ", [
                 $invNum,
                 $data['customer_id'],
                 $shipmentId,
-                $today,
-                $dueDate,
                 $pricing['subtotal'],
                 $pricing['tax'],
                 $pricing['total'],
@@ -138,7 +131,7 @@ class ShipmentService
 
             Database::execute("
                 INSERT INTO payments (payment_number, invoice_id, customer_id, amount, currency, method, reference, status, paid_at, created_by)
-                VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', ?, ?)
+                VALUES (?, ?, ?, ?, 'AED', ?, ?, 'completed', NOW(), ?)
             ", [
                 $payNum,
                 $invoiceId,
@@ -146,7 +139,6 @@ class ShipmentService
                 $pricing['total'],
                 $payMethod,
                 $payRef,
-                $now,
                 $data['created_by'] ?? null
             ]);
 

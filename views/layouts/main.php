@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'Rapid Courier | UAE & GCC Logistics') ?></title>
-    <meta name="description" content="Rapid Courier UAE — Premium courier, same-day delivery, GCC road freight and worldwide logistics services.">
-    <meta property="og:site_name" content="Rapid Courier UAE">
-    <meta property="og:title" content="<?= e($title ?? 'Rapid Courier UAE | Premium Logistics') ?>">
-    <meta property="og:description" content="Rapid Courier UAE — Premium courier, same-day delivery, GCC road freight and worldwide logistics services.">
-    <meta property="og:image" content="<?= \App\Core\View::url('/assets/images/rc_logo_hd.png') ?>">
-    <meta property="og:url" content="<?= \App\Core\View::url('/') ?>">
-    <meta property="og:type" content="website">
+    <title><?= e($title ?? 'RC Courier | UAE & GCC Logistics') ?></title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= \App\Core\View::asset('assets/images/rc_logo_256.png') ?>">
+    <link rel="shortcut icon" href="<?= \App\Core\View::asset('assets/images/rc_logo.png') ?>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,6 +43,9 @@
                 <?php if ($user): ?>
                     <?php $dashUrl = ($user['role_name'] === 'customer') ? '/customer' : '/admin'; ?>
                     <a href="<?= \App\Core\View::url($dashUrl) ?>" class="btn btn-gold">Dashboard</a>
+                <?php else: ?>
+                    <a href="<?= \App\Core\View::url('/login') ?>" class="btn btn-gold">Login</a>
+                    <a href="<?= \App\Core\View::url('/register') ?>" class="btn btn-dark">Register</a>
                 <?php endif; ?>
             </div>
         </div>

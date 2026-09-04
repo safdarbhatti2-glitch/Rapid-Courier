@@ -17,13 +17,11 @@ class AdminController
     {
         $user = Session::get('user');
 
-        $today = date('Y-m-d');
-
         $metrics = [
-            'shipments_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE DATE(created_at) = ?", [$today])['cnt'] ?? 0,
+            'shipments_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE DATE(created_at) = CURDATE()")['cnt'] ?? 0,
             'in_transit'      => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'IN_TRANSIT'")['cnt'] ?? 0,
-            'delivered_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'DELIVERED' AND DATE(updated_at) = ?", [$today])['cnt'] ?? 0,
-            'revenue_today'   => Database::fetchOne("SELECT COALESCE(SUM(amount), 0) as tot FROM payments WHERE DATE(paid_at) = ?", [$today])['tot'] ?? 0.00,
+            'delivered_today' => Database::fetchOne("SELECT COUNT(*) as cnt FROM shipments WHERE status = 'DELIVERED' AND DATE(updated_at) = CURDATE()")['cnt'] ?? 0,
+            'revenue_today'   => Database::fetchOne("SELECT COALESCE(SUM(amount), 0) as tot FROM payments WHERE DATE(paid_at) = CURDATE()")['tot'] ?? 0.00,
             'unpaid_invoices' => Database::fetchOne("SELECT COUNT(*) as cnt FROM invoices WHERE status IN ('ISSUED', 'PARTIALLY_PAID', 'OVERDUE')")['cnt'] ?? 0,
             'pending_quotes'  => Database::fetchOne("SELECT COUNT(*) as cnt FROM quotes WHERE status IN ('DRAFT', 'SENT')")['cnt'] ?? 0,
         ];
@@ -281,9 +279,8 @@ class AdminController
                 );
             }
 
-            $now = date('Y-m-d H:i:s');
             // Update overall shipment status to final generated status
-            Database::execute("UPDATE shipments SET status = ?, updated_at = ? WHERE id = ?", [$lastStatus, $now, $shipmentId]);
+            Database::execute("UPDATE shipments SET status = ?, updated_at = NOW() WHERE id = ?", [$lastStatus, $shipmentId]);
 
             Database::commit();
 
@@ -397,33 +394,32 @@ class AdminController
 
         try {
             Database::beginTransaction();
-            $now = date('Y-m-d H:i:s');
 
             // 1. Update Origin Address
             Database::execute("
                 UPDATE customer_addresses 
-                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = ? 
+                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = NOW() 
                 WHERE id = ?
-            ", [$senderName, $senderAddress, $senderArea, $senderEmirate, $senderEmirate, $now, $shipment['origin_address_id']]);
+            ", [$senderName, $senderAddress, $senderArea, $senderEmirate, $senderEmirate, $shipment['origin_address_id']]);
 
             // 2. Update Destination Address
             Database::execute("
                 UPDATE customer_addresses 
-                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = ? 
+                SET label = ?, address_line1 = ?, area = ?, emirate = ?, city = ?, updated_at = NOW() 
                 WHERE id = ?
-            ", [$receiverName, $receiverAddress, $receiverArea, $receiverEmirate, $receiverEmirate, $now, $shipment['destination_address_id']]);
+            ", [$receiverName, $receiverAddress, $receiverArea, $receiverEmirate, $receiverEmirate, $shipment['destination_address_id']]);
 
             // 3. Update Shipment Record
             Database::execute("
                 UPDATE shipments 
                 SET tracking_number = ?, status = ?, service_id = ?, weight_kg = ?, 
                     length_cm = ?, width_cm = ?, height_cm = ?, declared_value = ?, 
-                    subtotal = ?, discount = ?, tax = ?, total = ?, updated_at = ? 
+                    subtotal = ?, discount = ?, tax = ?, total = ?, updated_at = NOW() 
                 WHERE id = ?
             ", [
                 $trackingNum, $status, $serviceId, $pricing['chargeable_weight'],
                 $lengthCm, $widthCm, $heightCm, $declaredValue,
-                $subtotal, $discount, $tax, $total, $now, (int)$id
+                $subtotal, $discount, $tax, $total, (int)$id
             ]);
 
             // 4. Update Shipment Items
@@ -446,9 +442,9 @@ class AdminController
             if ($invoice) {
                 Database::execute("
                     UPDATE invoices 
-                    SET subtotal = ?, discount = ?, tax = ?, total = ?, balance_due = (total - amount_paid), updated_at = ? 
+                    SET subtotal = ?, discount = ?, tax = ?, total = ?, balance_due = (total - amount_paid), updated_at = NOW() 
                     WHERE id = ?
-                ", [$subtotal, $discount, $tax, $total, $now, $invoice['id']]);
+                ", [$subtotal, $discount, $tax, $total, $invoice['id']]);
 
                 Database::execute("
                     UPDATE invoice_items 
@@ -679,13 +675,12 @@ class AdminController
 
         try {
             Database::beginTransaction();
-            $now = date('Y-m-d H:i:s');
             foreach ($fields as $key => $item) {
                 $exists = Database::fetchOne("SELECT id FROM settings WHERE setting_key = ?", [$key]);
                 if ($exists) {
-                    Database::execute("UPDATE settings SET setting_value = ?, updated_at = ? WHERE setting_key = ?", [$item['val'], $now, $key]);
+                    Database::execute("UPDATE settings SET setting_value = ?, updated_at = NOW() WHERE setting_key = ?", [$item['val'], $key]);
                 } else {
-                    Database::execute("INSERT INTO settings (setting_key, setting_value, `group`, updated_at) VALUES (?, ?, ?, ?)", [$key, $item['val'], $item['group'], $now]);
+                    Database::execute("INSERT INTO settings (setting_key, setting_value, `group`, updated_at) VALUES (?, ?, ?, NOW())", [$key, $item['val'], $item['group']]);
                 }
             }
 

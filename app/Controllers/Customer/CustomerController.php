@@ -44,7 +44,7 @@ class CustomerController
         $shipments = Database::fetchAll("SELECT s.*, serv.name as service_name, oa.emirate as origin_emirate, da.emirate as destination_emirate FROM shipments s JOIN services serv ON s.service_id = serv.id JOIN customer_addresses oa ON s.origin_address_id = oa.id JOIN customer_addresses da ON s.destination_address_id = da.id WHERE s.customer_id = ? ORDER BY s.created_at DESC", [$customerId]);
 
         View::render('customer.shipments', [
-            'title'     => 'My Shipments — Antigravity Express UAE',
+            'title'     => 'My Shipments — RC Courier UAE',
             'shipments' => $shipments
         ], 'customer');
     }
@@ -62,7 +62,7 @@ class CustomerController
         $events = Database::fetchAll("SELECT * FROM shipment_status_events WHERE shipment_id = ? ORDER BY event_time ASC", [$shipment['id']]);
 
         View::render('customer.shipment_detail', [
-            'title'    => "Shipment {$shipment['reference_number']} — Antigravity Express UAE",
+            'title'    => "Shipment {$shipment['reference_number']} — RC Courier UAE",
             'shipment' => $shipment,
             'events'   => $events
         ], 'customer');
@@ -76,7 +76,7 @@ class CustomerController
         $invoices = Database::fetchAll("SELECT * FROM invoices WHERE customer_id = ? ORDER BY created_at DESC", [$customerId]);
 
         View::render('customer.invoices', [
-            'title'    => 'My Invoices — Antigravity Express UAE',
+            'title'    => 'My Invoices — RC Courier UAE',
             'invoices' => $invoices
         ], 'customer');
     }
@@ -95,7 +95,7 @@ class CustomerController
         $payments = Database::fetchAll("SELECT * FROM payments WHERE invoice_id = ? ORDER BY paid_at DESC", [$invoice['id']]);
 
         View::render('customer.invoice_detail', [
-            'title'    => "Invoice {$invoice['invoice_number']} — Antigravity Express UAE",
+            'title'    => "Invoice {$invoice['invoice_number']} — RC Courier UAE",
             'invoice'  => $invoice,
             'items'    => $items,
             'payments' => $payments
@@ -110,7 +110,7 @@ class CustomerController
         $quotes = Database::fetchAll("SELECT * FROM quotes WHERE customer_id = ? OR contact_email = ? ORDER BY created_at DESC", [$customerId, $user['email']]);
 
         View::render('customer.quotes', [
-            'title'  => 'My Quotations — Antigravity Express UAE',
+            'title'  => 'My Quotations — RC Courier UAE',
             'quotes' => $quotes
         ], 'customer');
     }
@@ -121,7 +121,7 @@ class CustomerController
         $customer = Database::fetchOne("SELECT * FROM customers WHERE id = ?", [$user['customer_id'] ?? 0]);
 
         View::render('customer.profile', [
-            'title'    => 'Profile & Settings — Antigravity Express UAE',
+            'title'    => 'Profile & Settings — RC Courier UAE',
             'user'     => $user,
             'customer' => $customer
         ], 'customer');

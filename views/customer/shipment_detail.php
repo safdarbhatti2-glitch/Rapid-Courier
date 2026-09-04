@@ -43,7 +43,7 @@
             <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary);">Need Assistance?</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Contact our Dubai central logistics dispatch desk for immediate support.</p>
             <p style="font-size: 0.85rem;"><strong>Phone:</strong> +971 4 800 2684</p>
-            <p style="font-size: 0.85rem;"><strong>Email:</strong> support@antigravityexpress.ae</p>
+            <p style="font-size: 0.85rem;"><strong>Email:</strong> support@rapid-courier.com</p>
         </div>
     </div>
 </div>

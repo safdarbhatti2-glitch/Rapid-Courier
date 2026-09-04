@@ -72,7 +72,7 @@ class DocumentController
         $items = Database::fetchAll("SELECT * FROM quote_items WHERE quote_id = ?", [$quote['id']]);
 
         View::render('documents.quote', [
-            'title' => "QUOTATION {$quote['quote_number']} — Antigravity Express UAE",
+            'title' => "QUOTATION {$quote['quote_number']} — RC Courier UAE",
             'quote' => $quote,
             'items' => $items
         ], null);
@@ -89,7 +89,7 @@ class DocumentController
         }
 
         View::render('documents.waybill', [
-            'title'    => "WAYBILL {$shipment['tracking_number']} — Antigravity Express UAE",
+            'title'    => "WAYBILL {$shipment['tracking_number']} — RC Courier UAE",
             'shipment' => $shipment
         ], null);
     }

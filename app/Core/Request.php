@@ -24,15 +24,9 @@ class Request
         $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
         $baseDir = dirname($scriptName);
 
-        // Normalize base path for subfolder setups
-        if ($baseDir !== '/' && $baseDir !== '/public' && $baseDir !== '\public' && str_starts_with($uri, $baseDir)) {
+        // Normalize base path for subfolder setups (e.g. /RC courier/public)
+        if ($baseDir !== '/' && str_starts_with($uri, $baseDir)) {
             $uri = substr($uri, strlen($baseDir));
-        }
-
-        if (str_starts_with($uri, '/public/')) {
-            $uri = substr($uri, 7);
-        } elseif ($uri === '/public') {
-            $uri = '/';
         }
 
         $position = strpos($uri, '?');
@@ -43,21 +37,7 @@ class Request
         $this->uri = '/' . ltrim($uri, '/');
         $this->get = $_GET;
         $this->post = $_POST;
-        if (function_exists('getallheaders')) {
-            $this->headers = getallheaders() ?: [];
-        } else {
-            $headers = [];
-            foreach ($_SERVER as $name => $value) {
-                if (str_starts_with($name, 'HTTP_')) {
-                    $headerName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
-                    $headers[$headerName] = $value;
-                } elseif (in_array($name, ['CONTENT_TYPE', 'CONTENT_LENGTH', 'CONTENT_MD5'])) {
-                    $headerName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', $name))));
-                    $headers[$headerName] = $value;
-                }
-            }
-            $this->headers = $headers;
-        }
+        $this->headers = getallheaders() ?: [];
 
         $contentType = $this->getHeader('Content-Type') ?? '';
         if (str_contains($contentType, 'application/json')) {
