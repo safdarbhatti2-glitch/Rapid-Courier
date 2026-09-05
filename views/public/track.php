@@ -43,7 +43,7 @@ body{
 a{text-decoration:none;color:inherit}
 .container{width:min(1120px,calc(100% - 40px));margin:auto}
 .topbar{
-  height:76px;background:#07101f;color:#fff;border-bottom:1px solid #1d2b40;
+  height:80px;background:#07101f;color:#fff;border-bottom:1px solid #1d2b40;
   position:sticky;top:0;z-index:50;
 }
 .nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}

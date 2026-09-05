@@ -23,7 +23,7 @@
 body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--white);line-height:1.5}
 button,input,select,textarea{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
 .container{width:min(1120px,92%);margin:auto}
-.topbar{height:74px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.topbar{height:80px;position:sticky;top:0;z-index:50;background:rgba(5,10,18,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
 .nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}
 .brand{display:flex;align-items:center;gap:9px;font-family:Manrope;font-weight:800;white-space:nowrap}
 .logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);border:1px solid rgba(220,168,63,.5);background:linear-gradient(145deg,#172334,#080d15);font-size:13px}
@@ -106,10 +106,13 @@ footer{padding:58px 0 20px;background:#03070d;border-top:1px solid var(--line)}
 
 <header class="topbar">
  <div class="container nav">
-  <a class="brand" href="<?= \App\Core\View::url('/') ?>">
-    <div class="logo" style="padding:0; border:none; background:transparent;"><img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:42px; width:42px; border-radius:10px; object-fit:cover;"></div>
-    <div><span>COURIER</span><small>UAE • GCC LOGISTICS</small></div>
-  </a>
+   <a class="brand" href="<?= \App\Core\View::url('/') ?>" aria-label="RC Courier home" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+    <img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" srcset="<?= \App\Core\View::url('/assets/images/rc_logo_256.png') ?> 2x, <?= \App\Core\View::url('/assets/images/rc_logo_hd.png') ?> 3x" alt="RC Courier Logo" style="height: 48px; width: 48px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1.5px solid rgba(241,196,94,0.45); image-rendering: -webkit-optimize-contrast;">
+    <div class="brand-text" style="display:flex; flex-direction:column; justify-content:center;">
+        <span style="font-family:'Manrope','Inter',sans-serif; font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: -0.4px; line-height: 1.1;">RC COURIER</span>
+        <small style="font-family:'Inter',sans-serif; font-size: 9px; font-weight: 700; color: #f1c45e; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;">UAE • GCC LOGISTICS</small>
+    </div>
+   </a>
   <nav class="links">
     <a href="<?= \App\Core\View::url('/services') ?>">Services</a>
     <a href="<?= \App\Core\View::url('/track') ?>">Track Shipment</a>
