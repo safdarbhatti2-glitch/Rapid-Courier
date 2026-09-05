@@ -11,21 +11,6 @@ use App\Middleware\RoleMiddleware;
 use App\Middleware\CsrfMiddleware;
 
 // Public Marketing Routes
-$router->get('/update_rc', function() {
-    if (($_GET['key'] ?? '') !== 'rc_deploy_2026') {
-        http_response_code(403);
-        exit('Forbidden');
-    }
-    header('Content-Type: text/plain');
-    echo "Pulling latest git changes...\n";
-    $output = [];
-    $return_var = 0;
-    exec('git pull origin main 2>&1', $output, $return_var);
-    echo implode("\n", $output) . "\n";
-    echo "Exit code: " . $return_var;
-    exit;
-});
-
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/about', [HomeController::class, 'about']);
 $router->get('/services', [HomeController::class, 'services']);
