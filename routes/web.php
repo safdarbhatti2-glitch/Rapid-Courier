@@ -11,61 +11,6 @@ use App\Middleware\RoleMiddleware;
 use App\Middleware\CsrfMiddleware;
 
 // Public Marketing Routes
-$router->get('/seed_rc', function() {
-    if (($_GET['key'] ?? '') !== 'rc_deploy_2026') {
-        http_response_code(403);
-        exit('Forbidden');
-    }
-    header('Content-Type: text/plain');
-    echo "Running database seeder & password reset...\n";
-    try {
-        $hash = password_hash('Admin@123456', PASSWORD_DEFAULT);
-        // Ensure roles exist
-        $adminRole = \App\Core\Database::fetchOne("SELECT id FROM roles WHERE name IN ('admin', 'super_admin') ORDER BY id ASC");
-        if (!$adminRole) {
-            \App\Core\Database::execute("INSERT INTO roles (name) VALUES ('admin')");
-            $adminRoleId = \App\Core\Database::lastInsertId();
-        } else {
-            $adminRoleId = $adminRole['id'];
-        }
-
-        // Upsert admin@antigravityexpress.ae
-        $user1 = \App\Core\Database::fetchOne("SELECT id FROM users WHERE email = 'admin@antigravityexpress.ae'");
-        if ($user1) {
-            \App\Core\Database::execute("UPDATE users SET password_hash = ?, status = 'active', role_id = ? WHERE id = ?", [$hash, $adminRoleId, $user1['id']]);
-        } else {
-            \App\Core\Database::execute("INSERT INTO users (role_id, name, email, phone, password_hash, status) VALUES (?, 'System Admin', 'admin@antigravityexpress.ae', '+971 4 800 2684', ?, 'active')", [$adminRoleId, $hash]);
-        }
-
-        // Upsert admin@rccourier.ae
-        $user2 = \App\Core\Database::fetchOne("SELECT id FROM users WHERE email = 'admin@rccourier.ae'");
-        if ($user2) {
-            \App\Core\Database::execute("UPDATE users SET password_hash = ?, status = 'active', role_id = ? WHERE id = ?", [$hash, $adminRoleId, $user2['id']]);
-        } else {
-            \App\Core\Database::execute("INSERT INTO users (role_id, name, email, phone, password_hash, status) VALUES (?, 'RC Admin', 'admin@rccourier.ae', '+971 4 800 2684', ?, 'active')", [$adminRoleId, $hash]);
-        }
-
-        // Upsert demo customer
-        $custRole = \App\Core\Database::fetchOne("SELECT id FROM roles WHERE name = 'customer'");
-        $custRoleId = $custRole ? $custRole['id'] : 7;
-        $custHash = password_hash('Customer@123456', PASSWORD_DEFAULT);
-        $user3 = \App\Core\Database::fetchOne("SELECT id FROM users WHERE email = 'demo.customer@example.ae'");
-        if ($user3) {
-            \App\Core\Database::execute("UPDATE users SET password_hash = ?, status = 'active' WHERE id = ?", [$custHash, $user3['id']]);
-        } else {
-            \App\Core\Database::execute("INSERT INTO users (role_id, name, email, phone, password_hash, status) VALUES (?, 'Omar Al-Zaabi', 'demo.customer@example.ae', '+971 55 987 6543', ?, 'active')", [$custRoleId, $custHash]);
-        }
-
-        echo "Admin and customer passwords successfully updated on live database!\n";
-        echo "admin@antigravityexpress.ae -> Admin@123456\n";
-        echo "admin@rccourier.ae -> Admin@123456\n";
-        echo "demo.customer@example.ae -> Customer@123456\n";
-    } catch (\Throwable $e) {
-        echo "Error: " . $e->getMessage() . "\n" . $e->getTraceAsString();
-    }
-    exit;
-});
-
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/about', [HomeController::class, 'about']);
 $router->get('/services', [HomeController::class, 'services']);
