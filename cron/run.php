@@ -15,12 +15,15 @@ Autoloader::register(BASE_PATH);
 echo "[" . date('Y-m-d H:i:s') . "] Starting Antigravity Express Scheduled Maintenance Jobs...\n";
 
 try {
+    $now = date('Y-m-d H:i:s');
+    $today = date('Y-m-d');
+
     // 1. Expire outdated quotes
-    $expiredQuotes = Database::execute("UPDATE quotes SET status = 'EXPIRED', updated_at = NOW() WHERE status IN ('DRAFT', 'SENT', 'VIEWED') AND valid_until < CURDATE()");
+    $expiredQuotes = Database::execute("UPDATE quotes SET status = 'EXPIRED', updated_at = ? WHERE status IN ('DRAFT', 'SENT', 'VIEWED') AND valid_until < ?", [$now, $today]);
     echo " -> Expired quotes processed.\n";
 
     // 2. Mark overdue invoices
-    $overdueInvoices = Database::execute("UPDATE invoices SET status = 'OVERDUE', updated_at = NOW() WHERE status IN ('ISSUED', 'SENT', 'PARTIALLY_PAID') AND due_date < CURDATE()");
+    $overdueInvoices = Database::execute("UPDATE invoices SET status = 'OVERDUE', updated_at = ? WHERE status IN ('ISSUED', 'SENT', 'PARTIALLY_PAID') AND due_date < ?", [$now, $today]);
     echo " -> Overdue invoices updated.\n";
 
     echo "[" . date('Y-m-d H:i:s') . "] Scheduled Jobs Completed Successfully!\n";
