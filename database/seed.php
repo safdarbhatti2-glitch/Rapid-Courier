@@ -74,7 +74,12 @@ try {
     $usersMap = [];
     foreach ($usersData as $u) {
         $existing = Database::fetchOne("SELECT id FROM users WHERE email = ?", [$u['email']]);
+        if (!$existing && $u['role'] === 'admin') {
+            $existing = Database::fetchOne("SELECT id FROM users WHERE id = 1");
+        }
+        $hash = password_hash($u['pass'], PASSWORD_DEFAULT);
         if ($existing) {
+            Database::execute("UPDATE users SET password_hash = ? WHERE id = ?", [$hash, $existing['id']]);
             $usersMap[$u['email']] = $existing['id'];
         } else {
             $hash = password_hash($u['pass'], PASSWORD_DEFAULT);

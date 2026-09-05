@@ -146,9 +146,6 @@ footer{padding:65px 0 20px;border-top:1px solid var(--line);background:#03070d}
       <?php if ($user): ?>
           <?php $dashUrl = ($user['role_name'] === 'customer') ? '/customer' : '/admin'; ?>
           <a href="<?= \App\Core\View::url($dashUrl) ?>" class="btn btn-gold">Dashboard</a>
-      <?php else: ?>
-          <a href="<?= \App\Core\View::url('/login') ?>" class="btn btn-gold">Login</a>
-          <a href="<?= \App\Core\View::url('/register') ?>" class="btn btn-dark">Register</a>
       <?php endif; ?>
       <button class="menu" aria-label="Menu">☰</button>
     </div>
