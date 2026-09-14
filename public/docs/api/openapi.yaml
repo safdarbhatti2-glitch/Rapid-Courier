@@ -1,0 +1,259 @@
+openapi: 3.0.3
+info:
+  title: RC Courier UAE REST API
+  description: Production-ready RESTful API v1 for RC Courier UAE logistics, parcel shipping, quotations, tracking, tax invoices, 4x6 thermal labels, and HMAC webhooks.
+  version: 1.0.0
+  contact:
+    name: RC Courier Developer Support
+    email: api-support@rccourier.ae
+    url: https://rapid-courier.com/docs/api/
+servers:
+  - url: https://rapid-courier.com/api/v1
+    description: Production API Server (AED Currency)
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    ApiSecretAuth:
+      type: apiKey
+      in: header
+      name: X-API-Secret
+  schemas:
+    SuccessEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+        meta:
+          type: object
+          properties:
+            request_id:
+              type: string
+              example: RCREQ-20260914-98A1B2C3
+            timestamp:
+              type: string
+              example: 2026-09-14T14:25:38Z
+            version:
+              type: string
+              example: v1
+    ErrorEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Invalid parameters passed.
+            fields:
+              type: object
+
+paths:
+  /tracking/{tracking_number}:
+    get:
+      summary: Public Shipment Tracking
+      description: Retrieve public, customer-safe shipment tracking timeline and status.
+      parameters:
+        - name: tracking_number
+          in: path
+          required: true
+          schema:
+            type: string
+          example: RC41105043
+      responses:
+        '200':
+          description: Tracking timeline retrieved successfully.
+
+  /quotes:
+    post:
+      summary: Calculate Instant Shipping Quotation
+      description: Calculate shipping charges, volumetric weight, VAT (5%), and total amount in AED.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  example: express_same_day
+                origin_emirate:
+                  type: string
+                  example: Dubai
+                destination_emirate:
+                  type: string
+                  example: Abu Dhabi
+                weight_kg:
+                  type: number
+                  example: 2.5
+                declared_value:
+                  type: number
+                  example: 150.00
+      responses:
+        '200':
+          description: Quotation generated in AED.
+
+  /shipments:
+    post:
+      summary: Create Shipment & Book Delivery
+      description: Create a shipment booking. Supports Idempotency-Key header to prevent duplicate bookings. Auto-generates Waybill, Tracking Number, Tax Invoice, and Thermal Label.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema:
+            type: string
+          example: ik_98412503_abc
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  example: express_same_day
+                sender:
+                  type: object
+                receiver:
+                  type: object
+                package:
+                  type: object
+      responses:
+        '201':
+          description: Shipment created successfully.
+
+    get:
+      summary: List Customer Shipments
+      description: Retrieve paginated list of shipments for authenticated customer account.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of shipments retrieved.
+
+  /shipments/{id}:
+    get:
+      summary: Get Shipment Details
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shipment detail object.
+
+  /shipments/{id}/cancel:
+    post:
+      summary: Cancel Shipment
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shipment cancelled.
+
+  /shipments/{id}/label/thermal:
+    get:
+      summary: Download 4x6 Thermal Shipping Label
+      description: Returns print-ready 4x6 inch thermal label HTML with machine-readable Code128 SVG barcode and QR code.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 4x6 Thermal label HTML.
+
+  /invoices/{id}/download:
+    get:
+      summary: Download Tax Invoice
+      description: Returns print-ready UAE Tax Invoice HTML with 5% VAT calculation.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tax invoice HTML.
+
+  /webhooks:
+    post:
+      summary: Register Webhook URL
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: https://my-store.com/api/rc-webhook
+                events:
+                  type: array
+                  items:
+                    type: string
+                  example: ["shipment.created", "shipment.delivered"]
+      responses:
+        '201':
+          description: Webhook registered with HMAC secret.

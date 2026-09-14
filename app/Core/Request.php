@@ -95,6 +95,18 @@ class Request
         return $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     }
 
+    private ?array $apiKeyRecord = null;
+
+    public function setApiKeyRecord(array $record): void
+    {
+        $this->apiKeyRecord = $record;
+    }
+
+    public function getApiKeyRecord(): ?array
+    {
+        return $this->apiKeyRecord;
+    }
+
     public function userAgent(): string
     {
         return $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';

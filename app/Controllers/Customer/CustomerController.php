@@ -143,4 +143,68 @@ class CustomerController
 
         Response::redirect('/customer/profile');
     }
+
+    public function apiKeys(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+
+        $keys = Database::fetchAll(
+            "SELECT * FROM api_keys WHERE customer_id = ? ORDER BY created_at DESC",
+            [$customerId]
+        );
+
+        $webhooks = Database::fetchAll(
+            "SELECT * FROM api_webhooks WHERE customer_id = ? ORDER BY created_at DESC",
+            [$customerId]
+        );
+
+        $logs = Database::fetchAll(
+            "SELECT * FROM api_audit_logs WHERE customer_id = ? ORDER BY created_at DESC LIMIT 50",
+            [$customerId]
+        );
+
+        View::render('customer.api_keys', [
+            'title'    => 'API Credentials & Webhooks — RC Courier UAE',
+            'user'     => $user,
+            'keys'     => $keys,
+            'webhooks' => $webhooks,
+            'logs'     => $logs
+        ], 'customer');
+    }
+
+    public function createApiKey(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $name = trim($request->input('name', 'Main API Credential'));
+        $env  = trim($request->input('environment', 'live'));
+
+        if ($customerId > 0) {
+            $created = \App\Services\ApiService::createApiKey($customerId, $name, $env);
+            Session::setFlash('new_api_credential', $created);
+            Session::setFlash('success', "API Key '{$name}' generated successfully! Store the secret safely.");
+        } else {
+            Session::setFlash('error', 'Customer profile required to create API credentials.');
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function revokeApiKey(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $keyId = (int)$request->input('key_id', 0);
+
+        if ($customerId > 0 && $keyId > 0) {
+            Database::execute(
+                "UPDATE api_keys SET status = 'revoked', revoked_at = ? WHERE id = ? AND customer_id = ?",
+                [date('Y-m-d H:i:s'), $keyId, $customerId]
+            );
+            Session::setFlash('success', 'API credential revoked successfully.');
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
 }

@@ -446,6 +446,97 @@ try {
             `message` TEXT NOT NULL,
             `status` ENUM('new', 'read', 'replied') NOT NULL DEFAULT 'new',
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_keys" => "CREATE TABLE IF NOT EXISTS `api_keys` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `customer_id` BIGINT UNSIGNED NOT NULL,
+            `name` VARCHAR(100) NOT NULL,
+            `api_key` VARCHAR(64) NOT NULL UNIQUE,
+            `api_secret_hash` VARCHAR(255) NOT NULL,
+            `environment` ENUM('live', 'test') NOT NULL DEFAULT 'live',
+            `permissions` JSON NULL,
+            `status` ENUM('active', 'revoked', 'expired') NOT NULL DEFAULT 'active',
+            `rate_limit_rpm` INT UNSIGNED NOT NULL DEFAULT 60,
+            `expires_at` DATETIME NULL,
+            `revoked_at` DATETIME NULL,
+            `last_used_at` DATETIME NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+            INDEX `idx_api_keys_key` (`api_key`),
+            INDEX `idx_api_keys_customer` (`customer_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_idempotency" => "CREATE TABLE IF NOT EXISTS `api_idempotency` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `customer_id` BIGINT UNSIGNED NOT NULL,
+            `idempotency_key` VARCHAR(100) NOT NULL,
+            `endpoint` VARCHAR(255) NOT NULL,
+            `request_hash` VARCHAR(64) NOT NULL,
+            `response_code` INT NOT NULL,
+            `response_body` JSON NOT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+            INDEX `idx_idempotency_key` (`customer_id`, `idempotency_key`),
+            INDEX `idx_idempotency_created` (`created_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_webhooks" => "CREATE TABLE IF NOT EXISTS `api_webhooks` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `customer_id` BIGINT UNSIGNED NOT NULL,
+            `url` VARCHAR(255) NOT NULL,
+            `secret` VARCHAR(64) NOT NULL,
+            `events` JSON NOT NULL,
+            `status` ENUM('active', 'disabled', 'failed') NOT NULL DEFAULT 'active',
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+            INDEX `idx_webhooks_customer` (`customer_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_webhook_deliveries" => "CREATE TABLE IF NOT EXISTS `api_webhook_deliveries` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `webhook_id` BIGINT UNSIGNED NOT NULL,
+            `event_type` VARCHAR(50) NOT NULL,
+            `event_id` VARCHAR(100) NOT NULL,
+            `payload` JSON NOT NULL,
+            `response_code` INT NULL,
+            `response_body` TEXT NULL,
+            `execution_time_ms` INT UNSIGNED NULL,
+            `attempt` INT UNSIGNED NOT NULL DEFAULT 1,
+            `status` ENUM('success', 'failed', 'retrying') NOT NULL DEFAULT 'success',
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (`webhook_id`) REFERENCES `api_webhooks` (`id`) ON DELETE CASCADE,
+            INDEX `idx_webhook_deliv_webhook` (`webhook_id`),
+            INDEX `idx_webhook_deliv_status` (`status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_rate_limits" => "CREATE TABLE IF NOT EXISTS `api_rate_limits` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `api_key_id` BIGINT UNSIGNED NOT NULL,
+            `window_time` INT UNSIGNED NOT NULL,
+            `request_count` INT UNSIGNED NOT NULL DEFAULT 1,
+            FOREIGN KEY (`api_key_id`) REFERENCES `api_keys` (`id`) ON DELETE CASCADE,
+            INDEX `idx_rate_limits_window` (`api_key_id`, `window_time`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "api_audit_logs" => "CREATE TABLE IF NOT EXISTS `api_audit_logs` (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `request_id` VARCHAR(50) NOT NULL UNIQUE,
+            `api_key_id` BIGINT UNSIGNED NULL,
+            `customer_id` BIGINT UNSIGNED NULL,
+            `method` VARCHAR(10) NOT NULL,
+            `endpoint` VARCHAR(255) NOT NULL,
+            `response_code` INT NOT NULL,
+            `execution_time_ms` INT UNSIGNED NOT NULL,
+            `ip_address` VARCHAR(45) NOT NULL,
+            `user_agent` VARCHAR(255) NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX `idx_api_audit_req` (`request_id`),
+            INDEX `idx_api_audit_key` (`api_key_id`),
+            INDEX `idx_api_audit_cust` (`customer_id`),
+            INDEX `idx_api_audit_created` (`created_at`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     ];
 

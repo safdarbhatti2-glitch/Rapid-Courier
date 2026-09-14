@@ -34,6 +34,47 @@ class Response
         ], $statusCode);
     }
 
+    public static function apiSuccess(mixed $data = [], array $meta = [], int $statusCode = 200, ?string $requestId = null): void
+    {
+        $reqId = $requestId ?? ($_SERVER['HTTP_X_REQUEST_ID'] ?? ('RCREQ-' . date('Ymd') . '-' . strtoupper(substr(md5(uniqid('', true)), 0, 8))));
+        header("X-Request-ID: {$reqId}");
+
+        $meta['request_id'] = $reqId;
+        $meta['timestamp']  = date('Y-m-d\TH:i:s\Z');
+        $meta['version']    = 'v1';
+
+        self::json([
+            'success' => true,
+            'data'    => $data,
+            'meta'    => $meta
+        ], $statusCode);
+    }
+
+    public static function apiError(string $code, string $message, array $fields = [], int $statusCode = 400, ?string $requestId = null): void
+    {
+        $reqId = $requestId ?? ($_SERVER['HTTP_X_REQUEST_ID'] ?? ('RCREQ-' . date('Ymd') . '-' . strtoupper(substr(md5(uniqid('', true)), 0, 8))));
+        header("X-Request-ID: {$reqId}");
+
+        $errorObj = [
+            'code'    => $code,
+            'message' => $message
+        ];
+
+        if (!empty($fields)) {
+            $errorObj['fields'] = $fields;
+        }
+
+        self::json([
+            'success' => false,
+            'error'   => $errorObj,
+            'meta'    => [
+                'request_id' => $reqId,
+                'timestamp'  => date('Y-m-d\TH:i:s\Z'),
+                'version'    => 'v1'
+            ]
+        ], $statusCode);
+    }
+
     public static function redirect(string $url, int $statusCode = 302): void
     {
         if (str_starts_with($url, '/')) {

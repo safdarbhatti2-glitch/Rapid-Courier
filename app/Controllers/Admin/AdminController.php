@@ -699,4 +699,34 @@ class AdminController
 
         Response::redirect('/admin/settings');
     }
+
+    public function apiManagement(Request $request): void
+    {
+        $user = Session::get('user');
+
+        $apiKeys = Database::fetchAll(
+            "SELECT k.*, c.company_name, c.contact_name, c.email FROM api_keys k JOIN customers c ON k.customer_id = c.id ORDER BY k.created_at DESC"
+        );
+
+        $webhooks = Database::fetchAll(
+            "SELECT w.*, c.company_name, c.contact_name FROM api_webhooks w JOIN customers c ON w.customer_id = c.id ORDER BY w.created_at DESC"
+        );
+
+        $deliveries = Database::fetchAll(
+            "SELECT d.*, w.url FROM api_webhook_deliveries d JOIN api_webhooks w ON d.webhook_id = w.id ORDER BY d.created_at DESC LIMIT 50"
+        );
+
+        $auditLogs = Database::fetchAll(
+            "SELECT a.*, c.company_name FROM api_audit_logs a LEFT JOIN customers c ON a.customer_id = c.id ORDER BY a.created_at DESC LIMIT 100"
+        );
+
+        View::render('admin.api_management', [
+            'title'      => 'API & Webhook Platform Management — Admin',
+            'user'       => $user,
+            'apiKeys'    => $apiKeys,
+            'webhooks'   => $webhooks,
+            'deliveries' => $deliveries,
+            'auditLogs'  => $auditLogs
+        ], 'admin');
+    }
 }
