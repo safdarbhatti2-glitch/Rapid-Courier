@@ -51,7 +51,14 @@ $router->get('/customer/profile', [CustomerController::class, 'profile'], [AuthM
 $router->post('/customer/profile', [CustomerController::class, 'updateProfile'], [AuthMiddleware::class, CsrfMiddleware::class]);
 $router->get('/customer/api-keys', [CustomerController::class, 'apiKeys'], [AuthMiddleware::class]);
 $router->post('/customer/api-keys/create', [CustomerController::class, 'createApiKey'], [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post('/customer/api-keys/rotate', [CustomerController::class, 'rotateApiKey'], [AuthMiddleware::class, CsrfMiddleware::class]);
 $router->post('/customer/api-keys/revoke', [CustomerController::class, 'revokeApiKey'], [AuthMiddleware::class, CsrfMiddleware::class]);
+
+$router->post('/customer/webhooks/create', [CustomerController::class, 'createWebhook'], [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post('/customer/webhooks/delete', [CustomerController::class, 'deleteWebhook'], [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post('/customer/webhooks/toggle', [CustomerController::class, 'toggleWebhook'], [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post('/customer/webhooks/test', [CustomerController::class, 'testWebhook'], [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post('/customer/webhooks/retry', [CustomerController::class, 'retryWebhookDelivery'], [AuthMiddleware::class, CsrfMiddleware::class]);
 
 // Admin Portal Routes
 $router->get('/admin', [AdminController::class, 'dashboard'], [AuthMiddleware::class, RoleMiddleware::class]);
@@ -82,37 +89,41 @@ $router->get('/shipments/{id}/label', [DocumentController::class, 'waybillLabel'
 $router->get('/verify/invoice/{invoice_number}', [DocumentController::class, 'verifyInvoice']);
 
 // RESTful API v1 Routes
-// Public Tracking API
+// Public Tracking API (No API Key Required)
 $router->get('/api/v1/tracking/{tracking_number}', [ApiTrackingController::class, 'publicTrack']);
 
-// Quotes API
-$router->post('/api/v1/quotes', [ApiQuoteController::class, 'calculate'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/quotes/{id}', [ApiQuoteController::class, 'get'], [ApiAuthMiddleware::class]);
+// Quotes API (quotes:create)
+$router->post('/api/v1/quotes', [ApiQuoteController::class, 'calculate'], [new ApiAuthMiddleware('quotes:create')]);
+$router->get('/api/v1/quotes/{id}', [ApiQuoteController::class, 'get'], [new ApiAuthMiddleware('quotes:create')]);
 
-// Shipments API
-$router->post('/api/v1/shipments', [ApiShipmentController::class, 'create'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/shipments', [ApiShipmentController::class, 'list'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/shipments/{id}', [ApiShipmentController::class, 'get'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/shipments/{id}/tracking', [ApiTrackingController::class, 'getShipmentTracking'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/shipments/{id}/events', [ApiTrackingController::class, 'getEvents'], [ApiAuthMiddleware::class]);
-$router->post('/api/v1/shipments/{id}/cancel', [ApiShipmentController::class, 'cancel'], [ApiAuthMiddleware::class]);
+// Shipments API (shipments:create, shipments:read, shipments:cancel)
+$router->post('/api/v1/shipments', [ApiShipmentController::class, 'create'], [new ApiAuthMiddleware('shipments:create')]);
+$router->get('/api/v1/shipments', [ApiShipmentController::class, 'list'], [new ApiAuthMiddleware('shipments:read')]);
+$router->get('/api/v1/shipments/{id}', [ApiShipmentController::class, 'get'], [new ApiAuthMiddleware('shipments:read')]);
+$router->get('/api/v1/shipments/{id}/tracking', [ApiTrackingController::class, 'getShipmentTracking'], [new ApiAuthMiddleware('tracking:read')]);
+$router->get('/api/v1/shipments/{id}/events', [ApiTrackingController::class, 'getEvents'], [new ApiAuthMiddleware('tracking:read')]);
+$router->post('/api/v1/shipments/{id}/cancel', [ApiShipmentController::class, 'cancel'], [new ApiAuthMiddleware('shipments:cancel')]);
 
-// Invoices API
-$router->get('/api/v1/shipments/{id}/invoice', [ApiInvoiceController::class, 'getByShipment'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/invoices/{id}', [ApiInvoiceController::class, 'get'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/invoices/{id}/download', [ApiInvoiceController::class, 'download'], [ApiAuthMiddleware::class]);
+// Invoices API (invoices:read)
+$router->get('/api/v1/shipments/{id}/invoice', [ApiInvoiceController::class, 'getByShipment'], [new ApiAuthMiddleware('invoices:read')]);
+$router->get('/api/v1/invoices/{id}', [ApiInvoiceController::class, 'get'], [new ApiAuthMiddleware('invoices:read')]);
+$router->get('/api/v1/invoices/{id}/download', [ApiInvoiceController::class, 'download'], [new ApiAuthMiddleware('invoices:read')]);
 
-// Thermal Labels API
-$router->get('/api/v1/shipments/{id}/label', [ApiLabelController::class, 'getLabel'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/shipments/{id}/label/thermal', [ApiLabelController::class, 'getThermalLabel'], [ApiAuthMiddleware::class]);
+// Thermal Labels API (labels:read)
+$router->get('/api/v1/shipments/{id}/label', [ApiLabelController::class, 'getLabel'], [new ApiAuthMiddleware('labels:read')]);
+$router->get('/api/v1/shipments/{id}/label/thermal', [ApiLabelController::class, 'getThermalLabel'], [new ApiAuthMiddleware('labels:read')]);
 
-// Webhooks API
-$router->post('/api/v1/webhooks', [ApiWebhookController::class, 'register'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/webhooks', [ApiWebhookController::class, 'list'], [ApiAuthMiddleware::class]);
-$router->delete('/api/v1/webhooks/{id}', [ApiWebhookController::class, 'delete'], [ApiAuthMiddleware::class]);
+// Webhooks API (webhooks:manage)
+$router->post('/api/v1/webhooks', [ApiWebhookController::class, 'register'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->get('/api/v1/webhooks', [ApiWebhookController::class, 'list'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->put('/api/v1/webhooks/{id}', [ApiWebhookController::class, 'update'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->delete('/api/v1/webhooks/{id}', [ApiWebhookController::class, 'delete'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->post('/api/v1/webhooks/{id}/test', [ApiWebhookController::class, 'test'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->get('/api/v1/webhooks/deliveries', [ApiWebhookController::class, 'listDeliveries'], [new ApiAuthMiddleware('webhooks:manage')]);
+$router->post('/api/v1/webhooks/deliveries/{id}/retry', [ApiWebhookController::class, 'retryDelivery'], [new ApiAuthMiddleware('webhooks:manage')]);
 
 // Account API
-$router->get('/api/v1/account', [ApiAccountController::class, 'getAccount'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/account/shipments', [ApiShipmentController::class, 'list'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/account/invoices', [ApiInvoiceController::class, 'get'], [ApiAuthMiddleware::class]);
-$router->get('/api/v1/account/quotes', [ApiQuoteController::class, 'get'], [ApiAuthMiddleware::class]);
+$router->get('/api/v1/account', [ApiAccountController::class, 'getAccount'], [new ApiAuthMiddleware()]);
+$router->get('/api/v1/account/shipments', [ApiShipmentController::class, 'list'], [new ApiAuthMiddleware('shipments:read')]);
+$router->get('/api/v1/account/invoices', [ApiInvoiceController::class, 'get'], [new ApiAuthMiddleware('invoices:read')]);
+$router->get('/api/v1/account/quotes', [ApiQuoteController::class, 'get'], [new ApiAuthMiddleware('quotes:create')]);

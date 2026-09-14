@@ -204,6 +204,31 @@ class ShipmentService
             AuditService::log('shipment_status_update', 'shipment', $shipmentId, ['status' => $shipment['status']], ['status' => $status]);
 
             Database::commit();
+
+            // Auto-trigger webhooks for status transition
+            try {
+                WebhookService::triggerEvent('shipment.status_updated', (int)$shipment['customer_id'], [
+                    'shipment_id'      => $shipmentId,
+                    'reference_number' => $shipment['reference_number'],
+                    'tracking_number'  => $shipment['tracking_number'],
+                    'status'           => $status,
+                    'location'         => $location,
+                    'public_notes'     => $publicNotes
+                ]);
+
+                if ($status === 'DELIVERED') {
+                    WebhookService::triggerEvent('shipment.delivered', (int)$shipment['customer_id'], [
+                        'shipment_id'      => $shipmentId,
+                        'reference_number' => $shipment['reference_number'],
+                        'tracking_number'  => $shipment['tracking_number'],
+                        'status'           => 'DELIVERED',
+                        'delivered_at'     => date('Y-m-d H:i:s')
+                    ]);
+                }
+            } catch (Exception $w) {
+                // Webhook trigger failsafe
+            }
+
             return true;
 
         } catch (Exception $e) {

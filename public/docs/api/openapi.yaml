@@ -20,6 +20,10 @@ components:
       type: apiKey
       in: header
       name: X-API-Secret
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: key:secret
   schemas:
     SuccessEnvelope:
       type: object
@@ -63,7 +67,7 @@ paths:
   /tracking/{tracking_number}:
     get:
       summary: Public Shipment Tracking
-      description: Retrieve public, customer-safe shipment tracking timeline and status.
+      description: Retrieve public, customer-safe shipment tracking timeline and status. No API Key required.
       parameters:
         - name: tracking_number
           in: path
@@ -78,10 +82,11 @@ paths:
   /quotes:
     post:
       summary: Calculate Instant Shipping Quotation
-      description: Calculate shipping charges, volumetric weight, VAT (5%), and total amount in AED.
+      description: Calculate shipping charges, volumetric weight, VAT (5%), and total amount in AED. Requires scope `quotes:create`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -107,14 +112,17 @@ paths:
       responses:
         '200':
           description: Quotation generated in AED.
+        '403':
+          description: Missing `quotes:create` scope.
 
   /shipments:
     post:
       summary: Create Shipment & Book Delivery
-      description: Create a shipment booking. Supports Idempotency-Key header to prevent duplicate bookings. Auto-generates Waybill, Tracking Number, Tax Invoice, and Thermal Label.
+      description: Create a shipment booking. Supports Idempotency-Key header to prevent duplicate bookings. Auto-generates Waybill, Tracking Number, Tax Invoice, and Thermal Label. Requires scope `shipments:create`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: Idempotency-Key
           in: header
@@ -141,13 +149,16 @@ paths:
       responses:
         '201':
           description: Shipment created successfully.
+        '403':
+          description: Missing `shipments:create` scope.
 
     get:
       summary: List Customer Shipments
-      description: Retrieve paginated list of shipments for authenticated customer account.
+      description: Retrieve paginated list of shipments for authenticated customer account. Requires scope `shipments:read`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -170,9 +181,11 @@ paths:
   /shipments/{id}:
     get:
       summary: Get Shipment Details
+      description: Retrieve single shipment. Customer isolated. Requires scope `shipments:read`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -182,13 +195,17 @@ paths:
       responses:
         '200':
           description: Shipment detail object.
+        '404':
+          description: Shipment not found or customer isolation restricted.
 
   /shipments/{id}/cancel:
     post:
       summary: Cancel Shipment
+      description: Cancel a booked shipment. Requires scope `shipments:cancel`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -202,10 +219,11 @@ paths:
   /shipments/{id}/label/thermal:
     get:
       summary: Download 4x6 Thermal Shipping Label
-      description: Returns print-ready 4x6 inch thermal label HTML with machine-readable Code128 SVG barcode and QR code.
+      description: Returns print-ready 4x6 inch thermal label HTML with Code128 SVG barcode and QR code. Requires scope `labels:read`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -219,10 +237,11 @@ paths:
   /invoices/{id}/download:
     get:
       summary: Download Tax Invoice
-      description: Returns print-ready UAE Tax Invoice HTML with 5% VAT calculation.
+      description: Returns print-ready UAE Tax Invoice HTML with 5% VAT calculation. Requires scope `invoices:read`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -234,11 +253,24 @@ paths:
           description: Tax invoice HTML.
 
   /webhooks:
-    post:
-      summary: Register Webhook URL
+    get:
+      summary: List Registered Webhooks
+      description: List webhooks for customer account. Requires scope `webhooks:manage`.
       security:
         - ApiKeyAuth: []
           ApiSecretAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Webhooks list.
+
+    post:
+      summary: Register Webhook URL
+      description: Register webhook URL for status events. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -253,7 +285,118 @@ paths:
                   type: array
                   items:
                     type: string
-                  example: ["shipment.created", "shipment.delivered"]
+                  example: ["shipment.created", "shipment.delivered", "shipment.status_updated"]
       responses:
         '201':
           description: Webhook registered with HMAC secret.
+
+  /webhooks/{id}:
+    put:
+      summary: Update Webhook Endpoint
+      description: Update URL, status, or subscribed events. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                status:
+                  type: string
+                  enum: [active, disabled]
+                events:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Webhook updated.
+
+    delete:
+      summary: Delete Webhook Endpoint
+      description: Remove registered webhook. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Webhook deleted.
+
+  /webhooks/{id}/test:
+    post:
+      summary: Trigger Test Webhook Ping
+      description: Dispatches test event `webhook.test` with HMAC signature. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Test ping dispatched.
+
+  /webhooks/deliveries:
+    get:
+      summary: List Webhook Delivery Logs
+      description: Inspect delivery attempts, latencies, and HTTP response codes. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Delivery logs array.
+
+  /webhooks/deliveries/{id}/retry:
+    post:
+      summary: Retry Webhook Delivery
+      description: Re-sends failed delivery attempt to customer URL. Requires scope `webhooks:manage`.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delivery retried.
+
+  /account:
+    get:
+      summary: Get Account Profile & API Usage Stats
+      description: Returns customer profile, active key details, and aggregate request statistics.
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Account summary.

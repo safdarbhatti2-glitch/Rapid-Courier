@@ -164,12 +164,35 @@ class CustomerController
             [$customerId]
         );
 
+        $deliveries = Database::fetchAll(
+            "SELECT d.*, wh.url as webhook_url 
+             FROM api_webhook_deliveries d 
+             JOIN api_webhooks wh ON d.webhook_id = wh.id 
+             WHERE wh.customer_id = ? 
+             ORDER BY d.created_at DESC LIMIT 30",
+            [$customerId]
+        );
+
+        $totalReq   = Database::fetchOne("SELECT COUNT(*) as cnt FROM api_audit_logs WHERE customer_id = ?", [$customerId])['cnt'] ?? 0;
+        $successReq = Database::fetchOne("SELECT COUNT(*) as cnt FROM api_audit_logs WHERE customer_id = ? AND response_code < 400", [$customerId])['cnt'] ?? 0;
+        $errorReq   = Database::fetchOne("SELECT COUNT(*) as cnt FROM api_audit_logs WHERE customer_id = ? AND response_code >= 400", [$customerId])['cnt'] ?? 0;
+        $activeKeys = Database::fetchOne("SELECT COUNT(*) as cnt FROM api_keys WHERE customer_id = ? AND status = 'active'", [$customerId])['cnt'] ?? 0;
+
+        $stats = [
+            'total_requests'   => (int)$totalReq,
+            'success_requests' => (int)$successReq,
+            'error_requests'   => (int)$errorReq,
+            'active_keys'      => (int)$activeKeys
+        ];
+
         View::render('customer.api_keys', [
-            'title'    => 'API Credentials & Webhooks — RC Courier UAE',
-            'user'     => $user,
-            'keys'     => $keys,
-            'webhooks' => $webhooks,
-            'logs'     => $logs
+            'title'      => 'API Credentials & Webhooks — RC Courier UAE',
+            'user'       => $user,
+            'keys'       => $keys,
+            'webhooks'   => $webhooks,
+            'logs'       => $logs,
+            'deliveries' => $deliveries,
+            'stats'      => $stats
         ], 'customer');
     }
 
@@ -179,13 +202,65 @@ class CustomerController
         $customerId = $user['customer_id'] ?? 0;
         $name = trim($request->input('name', 'Main API Credential'));
         $env  = trim($request->input('environment', 'live'));
+        $perms = $request->input('permissions', []);
+
+        $validScopes = [
+            'shipments:create', 'shipments:read', 'shipments:cancel',
+            'quotes:create', 'tracking:read', 'invoices:read',
+            'labels:read', 'webhooks:manage'
+        ];
+
+        if (!is_array($perms) || empty($perms)) {
+            $perms = $validScopes;
+        } else {
+            $perms = array_intersect($perms, $validScopes);
+            if (empty($perms)) {
+                $perms = $validScopes;
+            }
+        }
 
         if ($customerId > 0) {
-            $created = \App\Services\ApiService::createApiKey($customerId, $name, $env);
+            $created = \App\Services\ApiService::createApiKey($customerId, $name, $env, $perms);
             Session::setFlash('new_api_credential', $created);
             Session::setFlash('success', "API Key '{$name}' generated successfully! Store the secret safely.");
         } else {
             Session::setFlash('error', 'Customer profile required to create API credentials.');
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function rotateApiKey(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $keyId = (int)$request->input('key_id', 0);
+
+        if ($customerId > 0 && $keyId > 0) {
+            $oldKey = Database::fetchOne(
+                "SELECT * FROM api_keys WHERE id = ? AND customer_id = ?",
+                [$keyId, $customerId]
+            );
+
+            if ($oldKey) {
+                // Revoke old key
+                Database::execute(
+                    "UPDATE api_keys SET status = 'revoked', revoked_at = ? WHERE id = ?",
+                    [date('Y-m-d H:i:s'), $oldKey['id']]
+                );
+
+                $perms = !empty($oldKey['permissions']) ? json_decode($oldKey['permissions'], true) : [];
+                $newKey = \App\Services\ApiService::createApiKey(
+                    $customerId,
+                    $oldKey['name'] . ' (Rotated)',
+                    $oldKey['environment'],
+                    $perms,
+                    (int)($oldKey['rate_limit_rpm'] ?? 60)
+                );
+
+                Session::setFlash('new_api_credential', $newKey);
+                Session::setFlash('success', "API Key '{$oldKey['name']}' rotated successfully! New key generated.");
+            }
         }
 
         Response::redirect('/customer/api-keys');
@@ -203,6 +278,121 @@ class CustomerController
                 [date('Y-m-d H:i:s'), $keyId, $customerId]
             );
             Session::setFlash('success', 'API credential revoked successfully.');
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function createWebhook(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+
+        $url = trim($request->input('url', ''));
+        $events = $request->input('events', ['shipment.created', 'shipment.delivered', 'shipment.cancelled']);
+
+        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            Session::setFlash('error', 'Please provide a valid HTTP or HTTPS Webhook URL.');
+            Response::redirect('/customer/api-keys');
+        }
+
+        if (!is_array($events) || empty($events)) {
+            $events = ['*'];
+        }
+
+        $secret = 'whsec_' . bin2hex(random_bytes(24));
+
+        Database::execute(
+            "INSERT INTO api_webhooks (customer_id, url, secret, events, status) VALUES (?, ?, ?, ?, 'active')",
+            [$customerId, $url, $secret, json_encode($events)]
+        );
+
+        Session::setFlash('success', 'Webhook endpoint registered successfully.');
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function deleteWebhook(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $whId = (int)$request->input('webhook_id', 0);
+
+        if ($customerId > 0 && $whId > 0) {
+            Database::execute("DELETE FROM api_webhooks WHERE id = ? AND customer_id = ?", [$whId, $customerId]);
+            Session::setFlash('success', 'Webhook endpoint deleted.');
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function toggleWebhook(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $whId = (int)$request->input('webhook_id', 0);
+
+        if ($customerId > 0 && $whId > 0) {
+            $wh = Database::fetchOne("SELECT status FROM api_webhooks WHERE id = ? AND customer_id = ?", [$whId, $customerId]);
+            if ($wh) {
+                $newStatus = ($wh['status'] === 'active') ? 'disabled' : 'active';
+                Database::execute("UPDATE api_webhooks SET status = ?, updated_at = ? WHERE id = ?", [$newStatus, date('Y-m-d H:i:s'), $whId]);
+                Session::setFlash('success', "Webhook status updated to {$newStatus}.");
+            }
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function testWebhook(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $whId = (int)$request->input('webhook_id', 0);
+
+        if ($customerId > 0 && $whId > 0) {
+            $wh = Database::fetchOne("SELECT * FROM api_webhooks WHERE id = ? AND customer_id = ?", [$whId, $customerId]);
+            if ($wh) {
+                $result = \App\Services\WebhookService::testDispatch($wh);
+                if ($result['status'] === 'success') {
+                    Session::setFlash('success', "Test Webhook dispatched successfully (HTTP {$result['response_code']}).");
+                } else {
+                    Session::setFlash('error', "Test Webhook failed (HTTP {$result['response_code']}). Error: " . ($result['response_body'] ?: 'Connection failed'));
+                }
+            }
+        }
+
+        Response::redirect('/customer/api-keys');
+    }
+
+    public function retryWebhookDelivery(Request $request): void
+    {
+        $user = Session::get('user');
+        $customerId = $user['customer_id'] ?? 0;
+        $deliveryId = (int)$request->input('delivery_id', 0);
+
+        if ($customerId > 0 && $deliveryId > 0) {
+            $delivery = Database::fetchOne(
+                "SELECT d.*, wh.customer_id, wh.url, wh.secret 
+                 FROM api_webhook_deliveries d 
+                 JOIN api_webhooks wh ON d.webhook_id = wh.id 
+                 WHERE d.id = ? AND wh.customer_id = ?",
+                [$deliveryId, $customerId]
+            );
+
+            if ($delivery) {
+                $webhook = [
+                    'id'     => $delivery['webhook_id'],
+                    'url'    => $delivery['url'],
+                    'secret' => $delivery['secret']
+                ];
+
+                $result = \App\Services\WebhookService::retryDelivery($delivery, $webhook);
+                if ($result['status'] === 'success') {
+                    Session::setFlash('success', "Webhook retry delivery succeeded (HTTP {$result['response_code']}).");
+                } else {
+                    Session::setFlash('error', "Webhook retry attempt failed (HTTP {$result['response_code']}).");
+                }
+            }
         }
 
         Response::redirect('/customer/api-keys');

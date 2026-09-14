@@ -55,9 +55,11 @@ class Router
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
                 // Run route middleware pipeline
-                foreach ($route['middleware'] as $mwClass) {
-                    if (class_exists($mwClass)) {
-                        $mw = new $mwClass();
+                foreach ($route['middleware'] as $mwItem) {
+                    if (is_object($mwItem)) {
+                        $mwItem->handle($request);
+                    } elseif (is_string($mwItem) && class_exists($mwItem)) {
+                        $mw = new $mwItem();
                         $mw->handle($request);
                     }
                 }
