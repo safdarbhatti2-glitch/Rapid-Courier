@@ -36,17 +36,10 @@ try {
     $usersData = [
         [
             'role' => 'admin',
-            'name' => 'Sara Al-Maktoum (System Admin)',
-            'email' => 'admin@antigravityexpress.ae',
-            'phone' => '+971 4 800 2684',
-            'pass' => 'Admin@123456'
-        ],
-        [
-            'role' => 'admin',
             'name' => 'Sara Al-Maktoum (RC Admin)',
             'email' => 'admin@rccourier.ae',
             'phone' => '+971 4 800 2684',
-            'pass' => 'Admin@123456'
+            'pass' => 'vpOa|NgR5#'
         ],
         [
             'role' => 'finance',
@@ -92,6 +85,8 @@ try {
             $usersMap[$u['email']] = Database::lastInsertId();
         }
     }
+
+    Database::execute("DELETE FROM users WHERE email = 'admin@antigravityexpress.ae'");
 
     // 3. Customers & Customer Addresses
     echo " -> Seeding Customers & Addresses...\n";

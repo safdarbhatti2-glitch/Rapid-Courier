@@ -23,7 +23,6 @@
 
 <div style="margin-top: 2rem; background: #f8fafc; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.8rem; color: #475569;">
     <strong>Demo Credentials:</strong><br>
-    • Admin: <code>admin@rccourier.ae</code> / <code>Admin@123456</code><br>
-    • Alt Admin: <code>admin@antigravityexpress.ae</code> / <code>Admin@123456</code><br>
+    • Admin: <code>admin@rccourier.ae</code><br>
     • Customer: <code>demo.customer@example.ae</code> / <code>Customer@123456</code>
 </div>
