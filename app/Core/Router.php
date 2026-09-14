@@ -65,7 +65,7 @@ class Router
                 $handler = $route['handler'];
 
                 if (is_callable($handler)) {
-                    call_user_func_array($handler, array_merge([$request], $params));
+                    call_user_func_array($handler, array_merge([$request], array_values($params)));
                     return;
                 }
 
@@ -74,7 +74,7 @@ class Router
                     if (class_exists($controllerClass)) {
                         $controller = new $controllerClass();
                         if (method_exists($controller, $methodName)) {
-                            call_user_func_array([$controller, $methodName], array_merge([$request], $params));
+                            call_user_func_array([$controller, $methodName], array_merge([$request], array_values($params)));
                             return;
                         }
                     }
