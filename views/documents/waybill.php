@@ -6,7 +6,8 @@
     <style>
         body { font-family: 'Courier New', Courier, monospace; color: #000; margin: 0; padding: 1rem; background: #fff; }
         .label-box { width: 400px; margin: auto; padding: 1.5rem; border: 3px solid #000; border-radius: 0.25rem; background: #fff; }
-        .barcode { text-align: center; margin: 1rem 0; font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; border: 2px dashed #000; padding: 0.75rem; background: #f8fafc; }
+        .barcode-container { text-align: center; margin: 1rem 0; border: 2px dashed #000; padding: 0.75rem; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #barcodeSvg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
         @media print { .no-print { display: none; } .label-box { border: 3px solid #000; } }
     </style>
@@ -17,6 +18,7 @@
     </div>
 
     <div class="label-box">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 0.75rem;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:32px; width:32px; border-radius:6px; object-fit:cover;">
                 <div style="font-size:1.1rem; font-weight:900;">RC COURIER UAE</div>
@@ -24,9 +26,8 @@
             <div style="font-size:0.9rem; font-weight:bold; text-transform:uppercase;"><?= e($shipment['service_name']) ?></div>
         </div>
 
-        <div class="barcode">
-            |||||||||||||||||||||||||||||<br>
-            <?= e($shipment['tracking_number']) ?>
+        <div class="barcode-container">
+            <svg id="barcodeSvg"></svg>
         </div>
 
         <div class="grid-2">
@@ -57,5 +58,24 @@
             <div>HUB: DXB-DLC-01</div>
         </div>
     </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+<script>
+(function(){
+  const trackingNumber = <?= json_encode($shipment['tracking_number'] ?: 'RC84920412') ?>;
+  if(window.JsBarcode){
+    JsBarcode("#barcodeSvg", trackingNumber, {
+      format: "CODE128",
+      lineColor: "#000000",
+      width: 1.8,
+      height: 50,
+      displayValue: true,
+      fontSize: 14,
+      font: "Courier New",
+      margin: 4
+    });
+  }
+})();
+</script>
 </body>
 </html>

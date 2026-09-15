@@ -88,6 +88,7 @@ $router->get('/invoices/{id}/thermal', [DocumentController::class, 'thermalRecei
 $router->get('/quotes/{id}/pdf', [DocumentController::class, 'printQuote']);
 $router->get('/shipments/{id}/label', [DocumentController::class, 'waybillLabel']);
 $router->get('/verify/invoice/{invoice_number}', [DocumentController::class, 'verifyInvoice']);
+$router->get('/v/{invoice_number}', [DocumentController::class, 'verifyInvoice']);
 
 // RESTful API v1 Routes
 // Public Tracking API (No API Key Required)

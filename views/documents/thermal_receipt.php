@@ -113,6 +113,17 @@ body{
   gap:4px;
   margin:8px 0 4px;
 }
+.qr-container{
+  width: 140px;
+  height: 140px;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
 
 @media print{
   @page {
@@ -256,7 +267,9 @@ body{
 
   <div class="center" style="margin-top:10px;">
     <div class="qr-box">
-      <div id="qrcode"></div>
+      <div class="qr-container">
+        <div id="qrcode"></div>
+      </div>
       <div style="font-size:8px;">Scan to verify invoice online</div>
     </div>
 
@@ -281,17 +294,17 @@ body{
 (function(){
   const invoice = <?= json_encode($invoice['invoice_number']) ?>;
   const trackingNumber = <?= json_encode($invoice['tracking_number'] ?: ($invoice['reference_number'] ?: 'RC84920412')) ?>;
-  const verificationUrl = <?= json_encode(\App\Core\View::qrUrl('/verify/invoice/' . $invoice['invoice_number'])) ?>;
+  const verificationUrl = <?= json_encode(\App\Core\View::qrUrl('/v/' . $invoice['invoice_number'])) ?>;
 
   const qr = document.getElementById('qrcode');
   if(window.QRCode){
     new QRCode(qr, {
       text: verificationUrl,
-      width: 60,
-      height: 60,
+      width: 120,
+      height: 120,
       colorDark: '#000000',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.H
     });
   }
 

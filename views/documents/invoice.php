@@ -437,14 +437,16 @@ body {
   gap: 12px;
 }
 .qr-container {
-  width: 70px;
-  height: 70px;
-  background: #fff;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  padding: 4px;
+  width: 130px;
+  height: 130px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-shadow: 0 4px 14px rgba(11, 24, 48, 0.08);
 }
 .qr-meta {
   text-align: right;
@@ -740,16 +742,16 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function(){
-  const verificationUrl = <?= json_encode(\App\Core\View::qrUrl('/verify/invoice/' . $invoice['invoice_number'])) ?>;
+  const verificationUrl = <?= json_encode(\App\Core\View::qrUrl('/v/' . $invoice['invoice_number'])) ?>;
   const qr = document.getElementById('qrcode');
   if(window.QRCode){
     new QRCode(qr, {
       text: verificationUrl,
-      width: 62,
-      height: 62,
+      width: 114,
+      height: 114,
       colorDark: '#0b1830',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.H
     });
   }
 })();
