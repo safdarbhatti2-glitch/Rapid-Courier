@@ -729,7 +729,6 @@ body {
     <div class="verify-qr-block">
       <div style="text-align: right;" class="qr-meta">
         <strong>Generated: RC Courier System (system)</strong><br>
-        <?= e(date('d M Y, H:i T')) ?><br>
         <strong><?= e($invNum) ?></strong>
       </div>
       <div class="qr-container">
