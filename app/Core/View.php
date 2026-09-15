@@ -84,16 +84,20 @@ class View
             return rtrim($envUrl, '/') . '/' . ltrim($path, '/');
         }
 
-        // For local development, construct the base URL using the exact host/port used by the client request
-        if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
-            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            return "{$scheme}://{$_SERVER['HTTP_HOST']}/" . ltrim($path, '/');
+        // For local development, resolve reachable host/port so mobile phones on local Wi-Fi can scan screen QR codes
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? '127.0.0.1:8000';
+        $hostParts = explode(':', $host);
+        $hostname = $hostParts[0];
+        $port = isset($hostParts[1]) ? ':' . $hostParts[1] : '';
+
+        if ($hostname === '127.0.0.1' || $hostname === 'localhost' || $hostname === '::1') {
+            $lanIp = gethostbyname(gethostname());
+            if (!empty($lanIp) && $lanIp !== '127.0.0.1' && $lanIp !== '::1') {
+                $hostname = $lanIp;
+            }
         }
 
-        if (!empty($envUrl)) {
-            return rtrim($envUrl, '/') . '/' . ltrim($path, '/');
-        }
-
-        return 'http://127.0.0.1:8000/' . ltrim($path, '/');
+        return "{$scheme}://{$hostname}{$port}/" . ltrim($path, '/');
     }
 }
