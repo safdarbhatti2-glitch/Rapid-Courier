@@ -164,17 +164,22 @@ body {
   border-collapse: collapse;
 }
 .meta-table td {
-  padding: 2px 0 2px 14px;
-  text-align: right;
+  padding: 3px 0;
+  vertical-align: middle;
 }
 .meta-table td.label {
   color: var(--text-muted);
   font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  padding-right: 12px;
 }
 .meta-table td.val {
   color: var(--text-dark);
   font-weight: 800;
-  font-family: monospace;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  text-align: left;
+  white-space: nowrap;
 }
 
 /* 3-Column Parties Grid */
