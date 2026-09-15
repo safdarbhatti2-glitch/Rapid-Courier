@@ -20,9 +20,12 @@
 
     <div class="quote-box">
         <div class="header">
-            <div>
-                <h2 style="margin:0; font-size:1.5rem; color:#0f172a;"><span style="color:#f1c45e;">RC</span> COURIER UAE</h2>
-                <p style="font-size:0.85rem; color:#64748b;">Official Logistics Quotation</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" alt="RC Courier Logo" style="height:44px; width:44px; border-radius:8px; object-fit:cover;">
+                <div>
+                    <h2 style="margin:0; font-size:1.5rem; color:#0f172a;"><span style="color:#f1c45e;">RC</span> COURIER UAE</h2>
+                    <p style="font-size:0.85rem; color:#64748b; margin:0;">Official Logistics Quotation</p>
+                </div>
             </div>
             <div style="text-align:right;">
                 <h3 style="margin:0; color:#0f172a;"><?= e($quote['quote_number']) ?></h3>

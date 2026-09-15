@@ -18,7 +18,7 @@ class DocumentController
         $user = Session::get('user');
         $invoice = Database::fetchOne("
             SELECT i.*, c.contact_name, c.company_name, c.email, c.phone, c.trn as customer_trn,
-                   s.tracking_number, s.reference_number, s.status as shipment_status, s.weight_kg, s.declared_value, s.created_at as shipment_date,
+                   s.tracking_number, s.reference_number, s.status as shipment_status, s.weight_kg, s.declared_value, s.created_at as shipment_date, s.pickup_at,
                    si.description as item_description,
                    serv.name as service_name,
                    oa.label as sender_name, oa.address_line1 as sender_address, oa.area as sender_area, oa.emirate as sender_emirate,
@@ -134,7 +134,7 @@ class DocumentController
         $user = Session::get('user');
         $invoice = Database::fetchOne("
             SELECT i.*, c.contact_name, c.company_name, c.email, c.phone, c.trn as customer_trn,
-                   s.tracking_number, s.reference_number, s.status as shipment_status, s.weight_kg, s.declared_value, s.created_at as shipment_date,
+                   s.tracking_number, s.reference_number, s.status as shipment_status, s.weight_kg, s.declared_value, s.created_at as shipment_date, s.pickup_at,
                    si.description as item_description,
                    serv.name as service_name,
                    oa.label as sender_name, oa.address_line1 as sender_address, oa.area as sender_area, oa.emirate as sender_emirate,

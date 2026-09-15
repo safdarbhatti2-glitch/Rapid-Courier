@@ -99,8 +99,8 @@ class ShipmentService
 
             // Auto-Generate Linked Tax Invoice for New Shipment
             $invNum = 'INV-' . date('Y') . '-' . str_pad((string)mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
-            $today = date('Y-m-d');
-            $dueDate = date('Y-m-d', strtotime('+14 days'));
+            $invoiceIssueDate = date('Y-m-d', strtotime($pickupAt));
+            $dueDate = date('Y-m-d', strtotime($pickupAt . ' +14 days'));
             Database::execute("
                 INSERT INTO invoices (invoice_number, customer_id, shipment_id, status, issue_date, due_date, currency, subtotal, discount, tax, total, amount_paid, balance_due)
                 VALUES (?, ?, ?, 'PAID', ?, ?, 'AED', ?, 0.00, ?, ?, ?, 0.00)
@@ -108,7 +108,7 @@ class ShipmentService
                 $invNum,
                 $data['customer_id'],
                 $shipmentId,
-                $today,
+                $invoiceIssueDate,
                 $dueDate,
                 $pricing['subtotal'],
                 $pricing['tax'],
@@ -234,6 +234,39 @@ class ShipmentService
         } catch (Exception $e) {
             Database::rollBack();
             throw new RuntimeException("Status update failed: " . $e->getMessage());
+        }
+    }
+
+    public static function deleteStatusEvent(int $shipmentId, int $eventId): bool
+    {
+        Database::beginTransaction();
+
+        try {
+            $event = Database::fetchOne("SELECT * FROM shipment_status_events WHERE id = ? AND shipment_id = ?", [$eventId, $shipmentId]);
+            if (!$event) {
+                throw new RuntimeException("Tracking event not found.");
+            }
+
+            Database::execute("DELETE FROM shipment_status_events WHERE id = ? AND shipment_id = ?", [$eventId, $shipmentId]);
+
+            // Resync shipment status with the latest remaining event (if any exist)
+            $latestEvent = Database::fetchOne("SELECT status, event_time FROM shipment_status_events WHERE shipment_id = ? ORDER BY event_time DESC, id DESC LIMIT 1", [$shipmentId]);
+            
+            $now = date('Y-m-d H:i:s');
+            if ($latestEvent) {
+                $newStatus = $latestEvent['status'];
+                $deliveredAt = ($newStatus === 'DELIVERED') ? $latestEvent['event_time'] : null;
+                Database::execute("UPDATE shipments SET status = ?, delivered_at = ?, updated_at = ? WHERE id = ?", [$newStatus, $deliveredAt, $now, $shipmentId]);
+            }
+
+            AuditService::log('shipment_event_delete', 'shipment', $shipmentId, ['deleted_event' => $event], []);
+
+            Database::commit();
+            return true;
+
+        } catch (Exception $e) {
+            Database::rollBack();
+            throw new RuntimeException("Failed to delete event: " . $e->getMessage());
         }
     }
 

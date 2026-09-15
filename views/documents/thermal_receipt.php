@@ -183,7 +183,7 @@ body{
 
   <div style="display:flex; justify-content:space-between; font-size:9.5px;">
     <span>INV #: <strong><?= e($invoice['invoice_number']) ?></strong></span>
-    <span>DATE: <strong><?= date('d/m/Y', strtotime($invoice['issue_date'])) ?></strong></span>
+    <span>DATE: <strong><?= date('d/m/Y', strtotime(!empty($invoice['pickup_at']) ? $invoice['pickup_at'] : $invoice['issue_date'])) ?></strong></span>
   </div>
 
   <div class="dashed"></div>

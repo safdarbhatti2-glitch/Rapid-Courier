@@ -59,6 +59,8 @@
 .event.done:before{background:var(--green)}
 .event b{font-size:11px !important}.event p,.event time{font-size:10px !important}
 .event time{color:#087fb8;font-size:10px !important;font-weight:800;white-space:nowrap}
+.delete-event-btn{background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
+.delete-event-btn:hover{background:#e11d48;color:#ffffff;border-color:#e11d48}
 .details{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
 .infoList{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .info{background:#f9fbfd;border:1px solid #dce5ed;border-radius:10px;padding:10px}
@@ -228,9 +230,15 @@
           <article class="event <?= $evClass ?>">
             <div>
               <b><?= e($ev['status']) ?> — <?= e($ev['location_name']) ?></b>
-              <p>Operational event recorded into RC Courier network.</p>
+              <p><?= e($ev['public_notes'] ?: 'Operational event recorded into RC Courier network.') ?></p>
             </div>
-            <time><?= e(date('M d, Y · H:i', strtotime($ev['event_time']))) ?></time>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <time><?= e(date('M d, Y · H:i', strtotime($ev['event_time']))) ?></time>
+              <form action="<?= \App\Core\View::url('/admin/shipments/' . $shipment['id'] . '/events/' . $ev['id'] . '/delete') ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this status event?');" style="margin:0;">
+                <input type="hidden" name="_token" value="<?= \App\Core\Session::getCsrfToken() ?>">
+                <button type="submit" class="delete-event-btn" title="Delete status event">🗑️ Delete</button>
+              </form>
+            </div>
           </article>
         <?php endforeach; ?>
         <?php if (empty($events)): ?>

@@ -210,6 +210,21 @@ class AdminController
         Response::redirect("/admin/shipments/{$id}");
     }
 
+    public function deleteShipmentEvent(Request $request, string $id, string $event_id): void
+    {
+        $shipmentId = (int)$id;
+        $eventId    = (int)$event_id;
+
+        try {
+            ShipmentService::deleteStatusEvent($shipmentId, $eventId);
+            Session::setFlash('success', 'Tracking status event deleted successfully.');
+        } catch (\Exception $e) {
+            Session::setFlash('error', "Failed to delete event: " . $e->getMessage());
+        }
+
+        Response::redirect("/admin/shipments/{$shipmentId}");
+    }
+
     public function autoGenerateEvents(Request $request, string $id): void
     {
         $user = Session::get('user');

@@ -93,16 +93,15 @@ body {
   align-items: center;
   gap: 12px;
 }
-.logo-badge {
-  width: 44px;
-  height: 44px;
-  background: var(--purple-dark);
-  color: #fff;
+.brand-logo-img {
+  width: 48px;
+  height: 48px;
   border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  font-size: 18px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(11, 24, 48, 0.15);
+  border: 1.5px solid rgba(241, 196, 94, 0.5);
+  image-rendering: -webkit-optimize-contrast;
+  flex-shrink: 0;
 }
 .brand-name {
   font-size: 20px;
@@ -518,7 +517,8 @@ body {
 
   $invNum = $invoice['invoice_number'];
   $trkNum = !empty($invoice['tracking_number']) ? $invoice['tracking_number'] : ($invoice['reference_number'] ?: 'RC84920412');
-  $issueDateFormatted = !empty($invoice['issue_date']) ? date('d M Y', strtotime($invoice['issue_date'])) : date('d M Y');
+  $pickupOrIssueDate = !empty($invoice['pickup_at']) ? $invoice['pickup_at'] : (!empty($invoice['issue_date']) ? $invoice['issue_date'] : null);
+  $issueDateFormatted = !empty($pickupOrIssueDate) ? date('d M Y', strtotime($pickupOrIssueDate)) : date('d M Y');
 ?>
 
 <main class="sheet">
@@ -526,7 +526,7 @@ body {
   <header class="header-grid">
     <div class="brand-left">
       <div class="logo-row">
-        <div class="logo-badge">RC</div>
+        <img src="<?= \App\Core\View::url('/assets/images/rc_logo.png') ?>" srcset="<?= \App\Core\View::url('/assets/images/rc_logo_256.png') ?> 2x, <?= \App\Core\View::url('/assets/images/rc_logo_hd.png') ?> 3x" alt="RC Courier Logo" class="brand-logo-img">
         <div>
           <div class="brand-name">RC Courier LLC</div>
           <div class="brand-sub">UAE's Premier Courier & Logistics Partner</div>

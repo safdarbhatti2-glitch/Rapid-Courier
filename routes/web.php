@@ -70,6 +70,7 @@ $router->get('/admin/shipments/{id}', [AdminController::class, 'shipmentDetail']
 $router->get('/admin/shipments/{id}/edit', [AdminController::class, 'editShipment'], [AuthMiddleware::class, RoleMiddleware::class]);
 $router->post('/admin/shipments/{id}/edit', [AdminController::class, 'updateShipmentDetails'], [AuthMiddleware::class, RoleMiddleware::class, CsrfMiddleware::class]);
 $router->post('/admin/shipments/{id}/status', [AdminController::class, 'updateShipmentStatus'], [AuthMiddleware::class, RoleMiddleware::class, CsrfMiddleware::class]);
+$router->post('/admin/shipments/{id}/events/{event_id}/delete', [AdminController::class, 'deleteShipmentEvent'], [AuthMiddleware::class, RoleMiddleware::class, CsrfMiddleware::class]);
 $router->post('/admin/shipments/{id}/auto-generate-events', [AdminController::class, 'autoGenerateEvents'], [AuthMiddleware::class, RoleMiddleware::class, CsrfMiddleware::class]);
 $router->get('/admin/tracking', [AdminController::class, 'tracking'], [AuthMiddleware::class, RoleMiddleware::class]);
 $router->get('/admin/quotes', [AdminController::class, 'quotes'], [AuthMiddleware::class, RoleMiddleware::class]);
