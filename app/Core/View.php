@@ -78,30 +78,22 @@ class View
     public static function qrUrl(string $path = ''): string
     {
         $envUrl = EnvLoader::get('APP_URL', '');
-        
+
         // If APP_URL is set to a live production domain, return that directly
         if (!empty($envUrl) && !str_contains($envUrl, 'localhost') && !str_contains($envUrl, '127.0.0.1') && !str_contains($envUrl, '::1')) {
             return rtrim($envUrl, '/') . '/' . ltrim($path, '/');
         }
 
-        // For local development, construct the reachable base URL including port
+        // For local development, construct the base URL using the exact host/port used by the client request
         if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
             $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            
-            $hostParts = explode(':', $_SERVER['HTTP_HOST']);
-            $hostname = $hostParts[0];
-            $port = isset($hostParts[1]) ? ':' . $hostParts[1] : '';
-
-            if ($hostname === '127.0.0.1' || $hostname === 'localhost' || $hostname === '::1') {
-                $lanIp = gethostbyname(gethostname());
-                if (!empty($lanIp) && $lanIp !== '127.0.0.1' && $lanIp !== '::1') {
-                    $hostname = $lanIp;
-                }
-            }
-
-            return "{$scheme}://{$hostname}{$port}/" . ltrim($path, '/');
+            return "{$scheme}://{$_SERVER['HTTP_HOST']}/" . ltrim($path, '/');
         }
 
-        return self::getBaseUrl() . '/' . ltrim($path, '/');
+        if (!empty($envUrl)) {
+            return rtrim($envUrl, '/') . '/' . ltrim($path, '/');
+        }
+
+        return 'http://127.0.0.1:8000/' . ltrim($path, '/');
     }
 }

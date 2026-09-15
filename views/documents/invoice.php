@@ -727,9 +727,14 @@ body {
     </div>
 
     <div class="verify-qr-block">
-      <div style="text-align: right;" class="qr-meta">
-        <strong>Generated: RC Courier System (system)</strong><br>
-        <strong><?= e($invNum) ?></strong>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+        <div style="text-align: right;" class="qr-meta">
+          <strong>Generated: RC Courier System (system)</strong><br>
+          <strong><?= e($invNum) ?></strong>
+        </div>
+        <div style="background: #ffffff; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 6px; display: inline-block;">
+          <svg id="invoiceBarcodeSvg"></svg>
+        </div>
       </div>
       <div class="qr-container">
         <div id="qrcode"></div>
@@ -739,9 +744,26 @@ body {
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 <script>
 (function(){
+  const invoiceNum = <?= json_encode($invNum) ?>;
+  const trkNum = <?= json_encode($trkNum) ?>;
   const verificationUrl = <?= json_encode(\App\Core\View::qrUrl('/v/' . $invoice['invoice_number'])) ?>;
+
+  if(window.JsBarcode){
+    JsBarcode("#invoiceBarcodeSvg", trkNum || invoiceNum, {
+      format: "CODE128",
+      lineColor: "#0b1830",
+      width: 1.2,
+      height: 35,
+      displayValue: true,
+      fontSize: 10,
+      font: "Inter",
+      margin: 2
+    });
+  }
+
   const qr = document.getElementById('qrcode');
   if(window.QRCode){
     new QRCode(qr, {
