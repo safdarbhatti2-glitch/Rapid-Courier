@@ -50,16 +50,29 @@ class View
         return '<input type="hidden" name="_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
     }
 
+    public static function getBaseUrl(): string
+    {
+        if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            return "{$scheme}://{$_SERVER['HTTP_HOST']}";
+        }
+
+        $envUrl = EnvLoader::get('APP_URL', '');
+        if (!empty($envUrl)) {
+            return rtrim($envUrl, '/');
+        }
+
+        return 'http://127.0.0.1:8000';
+    }
+
     public static function asset(string $path): string
     {
-        $baseUrl = rtrim(EnvLoader::get('APP_URL', '/'), '/');
-        return $baseUrl . '/' . ltrim($path, '/');
+        return self::getBaseUrl() . '/' . ltrim($path, '/');
     }
 
     public static function url(string $path = ''): string
     {
-        $baseUrl = rtrim(EnvLoader::get('APP_URL', '/'), '/');
-        return $baseUrl . '/' . ltrim($path, '/');
+        return self::getBaseUrl() . '/' . ltrim($path, '/');
     }
 
     public static function qrUrl(string $path = ''): string
