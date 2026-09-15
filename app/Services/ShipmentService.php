@@ -272,6 +272,15 @@ class ShipmentService
 
     public static function getTrackingInfo(string $trackingNumber): ?array
     {
+        $code = trim($trackingNumber);
+
+        // Extract code if a full URL was scanned or pasted
+        if (preg_match('#/verify/invoice/([^/?#]+)#i', $code, $matches)) {
+            $code = trim($matches[1]);
+        } elseif (preg_match('#[?&]number=([^&#]+)#i', $code, $matches)) {
+            $code = trim(urldecode($matches[1]));
+        }
+
         $shipment = Database::fetchOne("
             SELECT s.*, c.contact_name, c.company_name, serv.name as service_name, 
                    oa.label as sender_name, oa.address_line1 as origin_line1, oa.area as origin_area, oa.emirate as origin_emirate, 
@@ -281,8 +290,11 @@ class ShipmentService
             JOIN services serv ON s.service_id = serv.id 
             JOIN customer_addresses oa ON s.origin_address_id = oa.id 
             JOIN customer_addresses da ON s.destination_address_id = da.id 
-            WHERE s.tracking_number = ? OR s.reference_number = ?
-        ", [$trackingNumber, $trackingNumber]);
+            LEFT JOIN invoices i ON i.shipment_id = s.id
+            WHERE LOWER(s.tracking_number) = LOWER(?) 
+               OR LOWER(s.reference_number) = LOWER(?) 
+               OR LOWER(i.invoice_number) = LOWER(?)
+        ", [$code, $code, $code]);
 
         if (!$shipment) {
             return null;
