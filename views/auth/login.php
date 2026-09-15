@@ -21,8 +21,10 @@
     Don't have an account? <a href="<?= \App\Core\View::url('/register') ?>" style="font-weight: 600;">Register Here</a>
 </div>
 
-<div style="margin-top: 2rem; background: #f8fafc; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.8rem; color: #475569;">
-    <strong>Demo Credentials:</strong><br>
-    • Admin: <code>admin@rccourier.ae</code><br>
-    • Customer: <code>demo.customer@example.ae</code> / <code>Customer@123456</code>
+<div style="margin-top: 2rem; background: #f8fafc; padding: 0.85rem; border-radius: 0.5rem; font-size: 0.82rem; color: #334155; border: 1px solid #e2e8f0;">
+    <strong style="color: #0f172a;">Demo Credentials:</strong>
+    <div style="margin-top: 6px; line-height: 1.6;">
+        • <strong>Admin:</strong> <code>admin@rccourier.ae</code> &nbsp;/&nbsp; <code>Admin@123456</code><br>
+        • <strong>Customer:</strong> <code>demo.customer@example.ae</code> &nbsp;/&nbsp; <code>Customer@123456</code>
+    </div>
 </div>

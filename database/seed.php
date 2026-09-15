@@ -39,7 +39,7 @@ try {
             'name' => 'Sara Al-Maktoum (RC Admin)',
             'email' => 'admin@rccourier.ae',
             'phone' => '+971 4 800 2684',
-            'pass' => 'vpOa|NgR5#'
+            'pass' => 'Admin@123456'
         ],
         [
             'role' => 'finance',
