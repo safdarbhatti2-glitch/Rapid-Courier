@@ -551,8 +551,6 @@ body {
       <table class="meta-table">
         <tr><td class="label">Invoice #:</td><td class="val"><?= e($invNum) ?></td></tr>
         <tr><td class="label">Issue Date:</td><td class="val"><?= e($issueDateFormatted) ?></td></tr>
-        <tr><td class="label">Supply Date:</td><td class="val"><?= e($issueDateFormatted) ?></td></tr>
-        <tr><td class="label">Due Date:</td><td class="val">Immediate</td></tr>
         <tr><td class="label">Currency:</td><td class="val">UAE Dirham (AED)</td></tr>
         <tr><td class="label">Tracking:</td><td class="val"><?= e($trkNum) ?></td></tr>
       </table>
