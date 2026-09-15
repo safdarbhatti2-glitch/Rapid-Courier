@@ -97,9 +97,9 @@ class DocumentController
     public function verifyInvoice(Request $request, string $invoice_number): void
     {
         $code = trim($invoice_number);
-        if (preg_match('#/(?:verify/invoice|v)/([^/?#]+)#i', $code, $matches)) {
+        if (preg_match('~/(?:verify/invoice|v)/([^/?#]+)~i', $code, $matches)) {
             $code = trim($matches[1]);
-        } elseif (preg_match('#[?&]number=([^&#]+)#i', $code, $matches)) {
+        } elseif (preg_match('~[?&]number=([^&#]+)~i', $code, $matches)) {
             $code = trim(urldecode($matches[1]));
         }
 
