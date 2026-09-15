@@ -96,8 +96,9 @@ class DocumentController
 
     public function verifyInvoice(Request $request, string $invoice_number): void
     {
-        $invoice_number = trim($invoice_number);
+        $code = trim($invoice_number);
 
+        // 1. Search in invoices table (case-insensitive across invoice_number, tracking_number, or reference_number)
         $invoice = Database::fetchOne("
             SELECT i.id, i.invoice_number, i.status as invoice_status, i.issue_date, i.currency, i.subtotal, i.tax, i.total, i.amount_paid, i.balance_due, i.created_at,
                    c.contact_name, c.company_name,
@@ -112,13 +113,57 @@ class DocumentController
             LEFT JOIN services serv ON s.service_id = serv.id
             LEFT JOIN customer_addresses oa ON s.origin_address_id = oa.id
             LEFT JOIN customer_addresses da ON s.destination_address_id = da.id
-            WHERE i.invoice_number = ? OR s.tracking_number = ? OR s.reference_number = ?
-        ", [$invoice_number, $invoice_number, $invoice_number]);
+            WHERE LOWER(i.invoice_number) = LOWER(?) OR LOWER(s.tracking_number) = LOWER(?) OR LOWER(s.reference_number) = LOWER(?)
+        ", [$code, $code, $code]);
+
+        // 2. Fallback: Search directly in shipments table if not linked to an invoice row yet
+        if (!$invoice) {
+            $shipment = Database::fetchOne("
+                SELECT s.id as shipment_id, s.tracking_number, s.reference_number, s.status as shipment_status, s.weight_kg, s.subtotal, s.tax, s.total, s.created_at, s.pickup_at,
+                       c.contact_name, c.company_name,
+                       serv.name as service_name,
+                       oa.label as sender_name,
+                       oa.emirate as origin_emirate,
+                       da.emirate as dest_emirate
+                FROM shipments s
+                JOIN customers c ON s.customer_id = c.id
+                LEFT JOIN services serv ON s.service_id = serv.id
+                LEFT JOIN customer_addresses oa ON s.origin_address_id = oa.id
+                LEFT JOIN customer_addresses da ON s.destination_address_id = da.id
+                WHERE LOWER(s.tracking_number) = LOWER(?) OR LOWER(s.reference_number) = LOWER(?)
+            ", [$code, $code]);
+
+            if ($shipment) {
+                $invoice = [
+                    'id'              => $shipment['shipment_id'],
+                    'invoice_number'  => 'INV-' . $shipment['reference_number'],
+                    'invoice_status'  => 'ISSUED',
+                    'issue_date'      => !empty($shipment['pickup_at']) ? date('Y-m-d', strtotime($shipment['pickup_at'])) : date('Y-m-d', strtotime($shipment['created_at'])),
+                    'currency'        => 'AED',
+                    'subtotal'        => $shipment['subtotal'],
+                    'tax'             => $shipment['tax'],
+                    'total'           => $shipment['total'],
+                    'amount_paid'     => $shipment['total'],
+                    'balance_due'     => 0.00,
+                    'created_at'      => $shipment['created_at'],
+                    'contact_name'    => $shipment['contact_name'],
+                    'company_name'    => $shipment['company_name'],
+                    'tracking_number' => $shipment['tracking_number'],
+                    'reference_number'=> $shipment['reference_number'],
+                    'shipment_status' => $shipment['shipment_status'],
+                    'weight_kg'       => $shipment['weight_kg'],
+                    'service_name'    => $shipment['service_name'],
+                    'sender_name'     => $shipment['sender_name'],
+                    'origin_emirate'  => $shipment['origin_emirate'],
+                    'dest_emirate'    => $shipment['dest_emirate']
+                ];
+            }
+        }
 
         if (!$invoice) {
             View::render('documents.verify_invalid', [
                 'title'          => 'Invalid Invoice — RC Courier UAE Verification',
-                'invoice_number' => $invoice_number
+                'invoice_number' => $code
             ], null);
             return;
         }

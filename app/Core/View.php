@@ -77,32 +77,31 @@ class View
 
     public static function qrUrl(string $path = ''): string
     {
-        $baseUrl = rtrim(EnvLoader::get('APP_URL', ''), '/');
+        $envUrl = EnvLoader::get('APP_URL', '');
         
-        // If APP_URL is empty or contains localhost / 127.0.0.1 / ::1, resolve real LAN IPv4 for mobile scanners
-        if (empty($baseUrl) || str_contains($baseUrl, 'localhost') || str_contains($baseUrl, '127.0.0.1') || str_contains($baseUrl, '::1')) {
+        // If APP_URL is set to a live production domain, return that directly
+        if (!empty($envUrl) && !str_contains($envUrl, 'localhost') && !str_contains($envUrl, '127.0.0.1') && !str_contains($envUrl, '::1')) {
+            return rtrim($envUrl, '/') . '/' . ltrim($path, '/');
+        }
+
+        // For local development, construct the reachable base URL including port
+        if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
             $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
             
-            $hostIp = gethostbyname(gethostname());
-            if (empty($hostIp) || $hostIp === '127.0.0.1' || $hostIp === '::1') {
-                $hostIp = $_SERVER['SERVER_ADDR'] ?? '';
-            }
-            if (empty($hostIp) || $hostIp === '127.0.0.1' || $hostIp === '::1') {
-                $hostIp = '192.168.18.42'; // Fallback LAN IP
-            }
+            $hostParts = explode(':', $_SERVER['HTTP_HOST']);
+            $hostname = $hostParts[0];
+            $port = isset($hostParts[1]) ? ':' . $hostParts[1] : '';
 
-            // Extract script directory path if needed (e.g. /rc-courier/public)
-            $dir = '';
-            if (isset($_SERVER['SCRIPT_NAME'])) {
-                $dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-                if ($dir === '.' || $dir === '/' || $dir === '\\') {
-                    $dir = '';
+            if ($hostname === '127.0.0.1' || $hostname === 'localhost' || $hostname === '::1') {
+                $lanIp = gethostbyname(gethostname());
+                if (!empty($lanIp) && $lanIp !== '127.0.0.1' && $lanIp !== '::1') {
+                    $hostname = $lanIp;
                 }
             }
 
-            $baseUrl = "{$scheme}://{$hostIp}{$dir}";
+            return "{$scheme}://{$hostname}{$port}/" . ltrim($path, '/');
         }
 
-        return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
+        return self::getBaseUrl() . '/' . ltrim($path, '/');
     }
 }
