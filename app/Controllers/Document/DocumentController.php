@@ -112,8 +112,8 @@ class DocumentController
             LEFT JOIN services serv ON s.service_id = serv.id
             LEFT JOIN customer_addresses oa ON s.origin_address_id = oa.id
             LEFT JOIN customer_addresses da ON s.destination_address_id = da.id
-            WHERE i.invoice_number = ?
-        ", [$invoice_number]);
+            WHERE i.invoice_number = ? OR s.tracking_number = ? OR s.reference_number = ?
+        ", [$invoice_number, $invoice_number, $invoice_number]);
 
         if (!$invoice) {
             View::render('documents.verify_invalid', [
